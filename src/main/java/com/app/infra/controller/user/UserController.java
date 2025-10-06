@@ -55,4 +55,17 @@ public class UserController {
 
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> get(@PathVariable final Long id) {
+
+        log.info("GET -> /usr/users -> {}", id);
+
+        final UserDTO dto = userUseCase.findById(id)
+                .map(userMapper::mapToDTO)
+                .orElseThrow(() -> new IllegalStateException("User not found"));
+
+        return ResponseEntity.ok(dto);
+
+    }
+
 }
