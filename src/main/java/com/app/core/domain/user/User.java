@@ -1,6 +1,7 @@
 package com.app.core.domain.user;
 
 public class User {
+
     private Long id;
 
     private String username;
