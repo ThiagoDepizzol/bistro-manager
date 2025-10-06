@@ -1,10 +1,11 @@
 package com.app.infra.entity.user;
 
+import com.app.infra.entity.base.BaseEntity;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "usr_users")
-public class UserEntity {
+public class UserEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

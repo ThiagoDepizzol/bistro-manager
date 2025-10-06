@@ -1,6 +1,8 @@
 package com.app.core.domain.user;
 
-public class User {
+import com.app.core.domain.base.BaseEntity;
+
+public class User extends BaseEntity {
 
     private Long id;
 
