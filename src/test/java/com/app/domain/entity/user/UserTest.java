@@ -8,13 +8,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UserTest {
 
@@ -50,6 +47,25 @@ public class UserTest {
                     final Long id = invocation.getArgument(0);
 
                     return Optional.ofNullable(db.get(id));
+                });
+
+        Mockito.when(gateway.findAllActive(Mockito.anyInt(), Mockito.anyInt()))
+                .thenAnswer(invocation -> {
+
+                    final int page = invocation.getArgument(0);
+                    final int size = invocation.getArgument(1);
+
+                    final List<User> activeUsers = new ArrayList<>(db.values());
+
+                    final int fromIndex = page * size;
+                    final int toIndex = Math.min(fromIndex + size, activeUsers.size());
+
+                    if (fromIndex >= activeUsers.size()) {
+                        return Collections.emptyList();
+                    }
+
+                    return activeUsers.subList(fromIndex, toIndex);
+
                 });
 
         userUseCase = new UserUseCase(gateway);
@@ -102,6 +118,26 @@ public class UserTest {
         assertNotNull(user);
         assertEquals(userId, user.getId());
         assertEquals("Thiago Depizzol", user.getUsername());
+
+    }
+
+    @DisplayName("Buscar usuário pela paginação")
+    @Test
+    void testGetAll() {
+
+        userUseCase.save(new User("Thiago Depizzol", "thiago.depizzol@fiap.com.br", "12345678"));
+        userUseCase.save(new User("Maria Silva", "maria.silva@fiap.com.br", "87654321"));
+        userUseCase.save(new User("João Souza", "joao.souza@fiap.com.br", "abcdef12"));
+
+        final int page = 0;
+        final int size = 10;
+
+        final List<User> users = userUseCase.findAllActive(page, size);
+
+        assertEquals(3, users.size());
+        assertTrue(users.stream().anyMatch(user -> user.getUsername().equals("Thiago Depizzol")));
+        assertTrue(users.stream().anyMatch(user -> user.getUsername().equals("Maria Silva")));
+        assertTrue(users.stream().anyMatch(user -> user.getUsername().equals("João Souza")));
 
     }
 

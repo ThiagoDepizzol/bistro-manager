@@ -6,8 +6,13 @@ import com.app.infra.controller.user.mapper.UserMapper;
 import com.app.infra.entity.user.UserEntity;
 import com.app.infra.repository.user.UserRepository;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class UserRepositoryGateway implements UserGateway {
     private final UserMapper userMapper;
@@ -38,5 +43,18 @@ public class UserRepositoryGateway implements UserGateway {
         final User user = userMapper.mapToUser(savedEntity);
 
         return Optional.of(user);
+    }
+
+    @Override
+    public List<User> findAllActive(final int page, final int size) {
+
+        final Pageable pageable = PageRequest.of(page, size);
+
+        final Page<UserEntity> entities = userRepository.findAllByActive(pageable);
+
+        return entities
+                .stream()
+                .map(userMapper::mapToUser)
+                .collect(Collectors.toList());
     }
 }

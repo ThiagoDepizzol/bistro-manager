@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("usr/users")
 public class UserController {
@@ -65,6 +68,22 @@ public class UserController {
                 .orElseThrow(() -> new IllegalStateException("User not found"));
 
         return ResponseEntity.ok(dto);
+
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserDTO>> getAll(@RequestParam final int page, @RequestParam final int size) {
+
+        log.info("GET -> /usr/users -> {}, {}", page, size);
+
+        final List<User> users = userUseCase.findAllActive(page, size);
+
+        final List<UserDTO> dtos = users
+                .stream()
+                .map(userMapper::mapToDTO)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtos);
 
     }
 
