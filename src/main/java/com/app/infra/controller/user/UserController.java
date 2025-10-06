@@ -8,10 +8,7 @@ import com.app.infra.controller.user.mapper.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("usr/users")
@@ -35,7 +32,22 @@ public class UserController {
 
         final User user = userMapper.mapToUser(json);
 
-        final User useCreated = userUseCase.create(user);
+        final User useCreated = userUseCase.save(user);
+
+        final UserDTO dto = userMapper.mapToDTO(useCreated);
+
+        return ResponseEntity.ok(dto);
+
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDTO> update(@PathVariable final Long id, @RequestBody final UserJson json) {
+
+        log.info("PUT -> /usr/users -> {}, {}", id, json);
+
+        final User user = userMapper.mapToUser(json, id);
+
+        final User useCreated = userUseCase.save(user);
 
         final UserDTO dto = userMapper.mapToDTO(useCreated);
 

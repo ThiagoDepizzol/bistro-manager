@@ -14,6 +14,10 @@ public class UserMapper {
         return new User(json.getId(), json.getUsername(), json.getLogin(), json.getPassword());
     }
 
+    public User mapToUser(@NotNull final UserJson json, @NotNull final Long id) {
+        return new User(id, json.getUsername(), json.getLogin(), json.getPassword());
+    }
+
     public User mapToUser(@NotNull final UserEntity entity) {
         return new User(entity.getId(), entity.getUsername(), entity.getLogin(), entity.getPassword());
     }
@@ -23,7 +27,7 @@ public class UserMapper {
     }
 
     public UserDTO mapToDTO(@NotNull final User user) {
-        return new UserDTO();
+        return new UserDTO(user.getId(), user.getUsername());
     }
 
 

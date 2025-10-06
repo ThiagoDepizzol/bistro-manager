@@ -4,5 +4,5 @@ import com.app.core.domain.user.User;
 
 public interface UserGateway {
 
-    User create(User user);
+    User save(User user);
 }

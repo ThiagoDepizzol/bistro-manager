@@ -21,6 +21,8 @@ public class UserDTO {
         this.username = username;
     }
 
-    public UserDTO() {
+    public UserDTO(Long id, String username) {
+        this.id = id;
+        this.username = username;
     }
 }

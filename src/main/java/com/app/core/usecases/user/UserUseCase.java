@@ -11,8 +11,8 @@ public class UserUseCase {
         this.userGateway = userGateway;
     }
 
-    public User create(User user) {
+    public User save(final User user) {
 
-        return userGateway.create(user);
+        return userGateway.save(user);
     }
 }
