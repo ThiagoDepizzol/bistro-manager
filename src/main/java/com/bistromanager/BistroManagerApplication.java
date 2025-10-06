@@ -1,0 +1,13 @@
+package com.bistromanager;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class BistroManagerApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(BistroManagerApplication.class, args);
+	}
+
+}
