@@ -6,4 +6,6 @@ public interface AuthenticationGateway {
 
     void authentication(LoginDTO dto);
 
+    void disconnect(String login, String password);
+
 }

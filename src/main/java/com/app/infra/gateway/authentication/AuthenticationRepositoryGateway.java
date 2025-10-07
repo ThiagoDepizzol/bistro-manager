@@ -57,4 +57,36 @@ public class AuthenticationRepositoryGateway implements AuthenticationGateway {
 
     }
 
+    @Override
+    public void disconnect(@NotNull final String login, @NotNull final String password) {
+
+        final UserEntity userEntity = userRepository.findByEmail(login)
+                .orElseThrow(() -> {
+
+                    log.info("Email incorreto");
+
+                    //TODO: Refatorar regra de exception
+                    return new IllegalStateException("Usuário ou senha inválidos");
+                });
+
+        final boolean isPasswordCorrect = PasswordUtils.matches(password, userEntity.getPassword());
+
+        if (!isPasswordCorrect) {
+
+
+            log.info("Senha incorreto");
+
+            //TODO: Refatorar regra de exception
+            throw new IllegalStateException("Usuário ou senha inválidos");
+
+        }
+
+        userEntity.setLoginHash(null);
+        userEntity.setLoginDate(null);
+
+        userRepository.save(userEntity);
+
+
+    }
+
 }

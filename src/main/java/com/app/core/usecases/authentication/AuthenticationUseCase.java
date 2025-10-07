@@ -17,4 +17,10 @@ public class AuthenticationUseCase {
 
     }
 
+    public void disconnect(final String login, final String password) {
+
+        authenticationGateway.disconnect(login, password);
+
+    }
+
 }
