@@ -1,8 +1,10 @@
 package com.app.infra.application.controller.restaurant;
 
+import com.app.core.domain.location.Location;
 import com.app.core.domain.restaurant.Restaurant;
 import com.app.core.usecases.restaurant.RestaurantUseCase;
 import com.app.infra.application.dto.restaurant.RestaurantDTO;
+import com.app.infra.application.mapper.location.LocationMapper;
 import com.app.infra.application.mapper.restaurant.RestaurantMapper;
 import com.app.infra.application.request.restaurant.RestaurantRequest;
 import org.slf4j.Logger;
@@ -19,11 +21,14 @@ public class RestaurantController {
 
     private static final Logger log = LoggerFactory.getLogger(RestaurantController.class);
 
+    private final LocationMapper locationMapper;
+
     private final RestaurantMapper restaurantMapper;
 
     private final RestaurantUseCase restaurantUseCase;
 
-    public RestaurantController(final RestaurantMapper restaurantMapper, final RestaurantUseCase restaurantUseCase) {
+    public RestaurantController(final LocationMapper locationMapper, final RestaurantMapper restaurantMapper, final RestaurantUseCase restaurantUseCase) {
+        this.locationMapper = locationMapper;
         this.restaurantMapper = restaurantMapper;
         this.restaurantUseCase = restaurantUseCase;
     }
@@ -33,7 +38,9 @@ public class RestaurantController {
 
         log.info("POST -> /res/restaurants -> {}", json);
 
-        final Restaurant restaurant = restaurantMapper.mapToRestaurant(json);
+        final Location location = locationMapper.mapToLocation(json.getLocation());
+
+        final Restaurant restaurant = restaurantMapper.mapToRestaurant(json, location);
 
         final Restaurant restaurantCreated = restaurantUseCase.save(restaurant);
 

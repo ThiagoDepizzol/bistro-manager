@@ -1,6 +1,7 @@
 package com.app.infra.entity.restaurant;
 
 import com.app.infra.entity.base.BaseEntity;
+import com.app.infra.entity.location.LocationEntity;
 import com.app.infra.entity.user.UserEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -16,8 +17,9 @@ public class RestaurantEntity extends BaseEntity {
     @NotNull
     private String name;
 
-    //TODO: Implementar location
-    private String location;
+    @JoinColumn(name = "loc_location_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private LocationEntity location;
 
     //TODO: Validar se vai ser enum ou entity
     private String kitchenType;
@@ -42,11 +44,11 @@ public class RestaurantEntity extends BaseEntity {
         this.name = name;
     }
 
-    public String getLocation() {
+    public LocationEntity getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(LocationEntity location) {
         this.location = location;
     }
 
@@ -68,4 +70,14 @@ public class RestaurantEntity extends BaseEntity {
 
     public RestaurantEntity() {
     }
+
+    public RestaurantEntity(Long id, String name, LocationEntity location, String kitchenType, UserEntity restaurantOwner) {
+        this.id = id;
+        this.name = name;
+        this.location = location;
+        this.kitchenType = kitchenType;
+        this.restaurantOwner = restaurantOwner;
+    }
+
+
 }

@@ -1,15 +1,19 @@
 package com.app.infra.application.request.restaurant;
 
+import com.app.core.domain.user.User;
+import com.app.infra.application.request.location.LocationRequest;
+
 public class RestaurantRequest {
 
     private Long id;
 
-    private String username;
+    private String name;
 
-    private String login;
+    private LocationRequest location;
 
-    private String password;
+    private String kitchenType;
 
+    private User restaurantOwner;
 
     public Long getId() {
         return id;
@@ -19,27 +23,35 @@ public class RestaurantRequest {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getLogin() {
-        return login;
+    public LocationRequest getLocation() {
+        return location;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setLocation(LocationRequest location) {
+        this.location = location;
     }
 
-    public String getPassword() {
-        return password;
+    public String getKitchenType() {
+        return kitchenType;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setKitchenType(String kitchenType) {
+        this.kitchenType = kitchenType;
+    }
+
+    public User getRestaurantOwner() {
+        return restaurantOwner;
+    }
+
+    public void setRestaurantOwner(User restaurantOwner) {
+        this.restaurantOwner = restaurantOwner;
     }
 }

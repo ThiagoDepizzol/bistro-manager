@@ -1,6 +1,7 @@
 package com.app.core.domain.restaurant;
 
 import com.app.core.domain.base.BaseEntity;
+import com.app.core.domain.location.Location;
 import com.app.core.domain.user.User;
 
 public class Restaurant extends BaseEntity {
@@ -9,8 +10,7 @@ public class Restaurant extends BaseEntity {
 
     private String name;
 
-    // TODO: Implementar entity location
-    private String location;
+    private Location location;
 
     //TODO: Validar se vai ser enum ou entity
     private String kitchenType;
@@ -33,11 +33,11 @@ public class Restaurant extends BaseEntity {
         this.name = name;
     }
 
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 
@@ -58,5 +58,12 @@ public class Restaurant extends BaseEntity {
     }
 
     public Restaurant() {
+    }
+
+    public Restaurant(String name, Location location, String kitchenType, User restaurantOwner) {
+        this.name = name;
+        this.location = location;
+        this.kitchenType = kitchenType;
+        this.restaurantOwner = restaurantOwner;
     }
 }
