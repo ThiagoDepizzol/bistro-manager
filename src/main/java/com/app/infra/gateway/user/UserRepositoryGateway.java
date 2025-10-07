@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class UserRepositoryGateway implements UserGateway {
+
     private final UserMapper userMapper;
 
     private final UserRepository userRepository;

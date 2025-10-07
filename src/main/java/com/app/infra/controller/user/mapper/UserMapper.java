@@ -1,6 +1,7 @@
 package com.app.infra.controller.user.mapper;
 
 import com.app.core.domain.user.User;
+import com.app.core.utils.PasswordUtils;
 import com.app.infra.controller.user.dto.UserDTO;
 import com.app.infra.controller.user.json.UserJson;
 import com.app.infra.entity.user.UserEntity;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class UserMapper {
 
     public User mapToUser(@NotNull final UserJson json) {
-        return new User(json.getId(), json.getUsername(), json.getLogin(), json.getPassword());
+        return new User(json.getId(), json.getUsername(), json.getLogin(), PasswordUtils.encryptPassword(json.getPassword()));
     }
 
     public User mapToUser(@NotNull final UserJson json, @NotNull final Long id) {
@@ -23,7 +24,7 @@ public class UserMapper {
     }
 
     public UserEntity toEntity(@NotNull final User user) {
-        return new UserEntity();
+        return new UserEntity(user.getUsername(), user.getLogin(), user.getPassword());
     }
 
     public UserDTO mapToDTO(@NotNull final User user) {
