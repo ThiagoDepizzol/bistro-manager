@@ -11,6 +11,10 @@ import java.util.Optional;
 
 public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
+    @Query(nativeQuery = true, //
+            value = "select users.* " +//
+                    "from usr_users users " +//
+                    "where users.active = true ")
     Page<UserEntity> findAllByActive(Pageable pageable);
 
     @Query(nativeQuery = true, //
