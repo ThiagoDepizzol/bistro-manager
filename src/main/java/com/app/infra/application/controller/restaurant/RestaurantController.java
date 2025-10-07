@@ -1,10 +1,10 @@
-package com.app.infra.controller.restaurant;
+package com.app.infra.application.controller.restaurant;
 
 import com.app.core.domain.restaurant.Restaurant;
 import com.app.core.usecases.restaurant.RestaurantUseCase;
-import com.app.infra.controller.restaurant.dto.RestaurantDTO;
-import com.app.infra.controller.restaurant.json.RestaurantJson;
-import com.app.infra.controller.restaurant.mapper.RestaurantMapper;
+import com.app.infra.application.dto.restaurant.RestaurantDTO;
+import com.app.infra.application.mapper.restaurant.RestaurantMapper;
+import com.app.infra.application.request.restaurant.RestaurantRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +29,7 @@ public class RestaurantController {
     }
 
     @PostMapping
-    public ResponseEntity<RestaurantDTO> created(@RequestBody final RestaurantJson json) {
+    public ResponseEntity<RestaurantDTO> created(@RequestBody final RestaurantRequest json) {
 
         log.info("POST -> /res/restaurants -> {}", json);
 
@@ -44,7 +44,7 @@ public class RestaurantController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RestaurantDTO> update(@PathVariable final Long id, @RequestBody final RestaurantJson json) {
+    public ResponseEntity<RestaurantDTO> update(@PathVariable final Long id, @RequestBody final RestaurantRequest json) {
 
         log.info("PUT -> /res/restaurants -> {}, {}", id, json);
 

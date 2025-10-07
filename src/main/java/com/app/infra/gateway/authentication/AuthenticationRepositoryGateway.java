@@ -2,7 +2,7 @@ package com.app.infra.gateway.authentication;
 
 import com.app.core.gateways.authentication.AuthenticationGateway;
 import com.app.core.utils.PasswordUtils;
-import com.app.infra.controller.authentication.dto.LoginDTO;
+import com.app.infra.application.dto.authentication.LoginDTO;
 import com.app.infra.entity.user.UserEntity;
 import com.app.infra.repository.user.UserRepository;
 import jakarta.validation.constraints.NotNull;

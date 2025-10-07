@@ -1,6 +1,6 @@
-package com.app.infra.controller.user.json;
+package com.app.infra.application.request.user;
 
-public class UserJson {
+public class UserRequest {
 
     private Long id;
 

@@ -1,10 +1,10 @@
-package com.app.infra.controller.user;
+package com.app.infra.application.controller.user;
 
 import com.app.core.domain.user.User;
 import com.app.core.usecases.user.UserUseCase;
-import com.app.infra.controller.user.dto.UserDTO;
-import com.app.infra.controller.user.json.UserJson;
-import com.app.infra.controller.user.mapper.UserMapper;
+import com.app.infra.application.dto.user.UserDTO;
+import com.app.infra.application.mapper.user.UserMapper;
+import com.app.infra.application.request.user.UserRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> created(@RequestBody final UserJson json) {
+    public ResponseEntity<UserDTO> created(@RequestBody final UserRequest json) {
 
         log.info("POST -> /usr/users -> {}", json);
 
@@ -44,7 +44,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> update(@PathVariable final Long id, @RequestBody final UserJson json) {
+    public ResponseEntity<UserDTO> update(@PathVariable final Long id, @RequestBody final UserRequest json) {
 
         log.info("PUT -> /usr/users -> {}, {}", id, json);
 

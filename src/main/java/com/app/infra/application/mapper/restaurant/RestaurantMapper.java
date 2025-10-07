@@ -1,8 +1,8 @@
-package com.app.infra.controller.restaurant.mapper;
+package com.app.infra.application.mapper.restaurant;
 
 import com.app.core.domain.restaurant.Restaurant;
-import com.app.infra.controller.restaurant.dto.RestaurantDTO;
-import com.app.infra.controller.restaurant.json.RestaurantJson;
+import com.app.infra.application.dto.restaurant.RestaurantDTO;
+import com.app.infra.application.request.restaurant.RestaurantRequest;
 import com.app.infra.entity.restaurant.RestaurantEntity;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class RestaurantMapper {
 
-    public Restaurant mapToRestaurant(@NotNull final RestaurantJson json) {
+    public Restaurant mapToRestaurant(@NotNull final RestaurantRequest json) {
         return new Restaurant();
     }
 
-    public Restaurant mapToRestaurant(@NotNull final RestaurantJson json, @NotNull final Long id) {
+    public Restaurant mapToRestaurant(@NotNull final RestaurantRequest json, @NotNull final Long id) {
         return new Restaurant();
     }
 

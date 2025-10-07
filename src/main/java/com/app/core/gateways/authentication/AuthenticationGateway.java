@@ -1,6 +1,6 @@
 package com.app.core.gateways.authentication;
 
-import com.app.infra.controller.authentication.dto.LoginDTO;
+import com.app.infra.application.dto.authentication.LoginDTO;
 
 public interface AuthenticationGateway {
 

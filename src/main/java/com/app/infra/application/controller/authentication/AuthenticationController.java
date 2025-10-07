@@ -1,9 +1,9 @@
-package com.app.infra.controller.authentication;
+package com.app.infra.application.controller.authentication;
 
 import com.app.core.usecases.authentication.AuthenticationUseCase;
-import com.app.infra.controller.authentication.dto.LoginDTO;
-import com.app.infra.controller.authentication.json.LoginJson;
-import com.app.infra.controller.authentication.mapper.AuthenticationMapper;
+import com.app.infra.application.dto.authentication.LoginDTO;
+import com.app.infra.application.mapper.authentication.AuthenticationMapper;
+import com.app.infra.application.request.authentication.LoginRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody final LoginJson json) {
+    public ResponseEntity<?> login(@RequestBody final LoginRequest json) {
 
         log.info("POST -> /login -> {} ", json);
 

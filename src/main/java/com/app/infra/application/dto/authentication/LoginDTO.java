@@ -1,4 +1,4 @@
-package com.app.infra.controller.authentication.dto;
+package com.app.infra.application.dto.authentication;
 
 public class LoginDTO {
 

@@ -1,7 +1,7 @@
 package com.app.core.usecases.authentication;
 
 import com.app.core.gateways.authentication.AuthenticationGateway;
-import com.app.infra.controller.authentication.dto.LoginDTO;
+import com.app.infra.application.dto.authentication.LoginDTO;
 
 public class AuthenticationUseCase {
 

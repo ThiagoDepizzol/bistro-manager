@@ -2,7 +2,7 @@ package com.app.infra.gateway.restaurant;
 
 import com.app.core.domain.restaurant.Restaurant;
 import com.app.core.gateways.restaurant.RestaurantGateway;
-import com.app.infra.controller.restaurant.mapper.RestaurantMapper;
+import com.app.infra.application.mapper.restaurant.RestaurantMapper;
 import com.app.infra.entity.restaurant.RestaurantEntity;
 import com.app.infra.repository.restaurant.RestaurantRepository;
 import jakarta.validation.constraints.NotNull;

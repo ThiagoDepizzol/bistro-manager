@@ -1,6 +1,6 @@
-package com.app.infra.controller.restaurant.json;
+package com.app.infra.application.request.restaurant;
 
-public class RestaurantJson {
+public class RestaurantRequest {
 
     private Long id;
 

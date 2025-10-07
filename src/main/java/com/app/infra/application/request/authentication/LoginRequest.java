@@ -1,6 +1,6 @@
-package com.app.infra.controller.authentication.json;
+package com.app.infra.application.request.authentication;
 
-public class LoginJson {
+public class LoginRequest {
 
     private String login;
 
@@ -22,6 +22,6 @@ public class LoginJson {
         this.password = password;
     }
 
-    public LoginJson() {
+    public LoginRequest() {
     }
 }

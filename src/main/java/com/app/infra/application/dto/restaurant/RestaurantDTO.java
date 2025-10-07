@@ -1,4 +1,4 @@
-package com.app.infra.controller.restaurant.dto;
+package com.app.infra.application.dto.restaurant;
 
 public class RestaurantDTO {
     private Long id;

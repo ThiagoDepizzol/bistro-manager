@@ -1,4 +1,4 @@
-package com.app.infra.controller.user.dto;
+package com.app.infra.application.dto.user;
 
 public class UserDTO {
     private Long id;
@@ -25,4 +25,5 @@ public class UserDTO {
         this.id = id;
         this.username = username;
     }
+    
 }
