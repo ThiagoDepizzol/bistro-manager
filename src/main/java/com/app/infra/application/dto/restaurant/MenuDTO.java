@@ -1,7 +1,5 @@
 package com.app.infra.application.dto.restaurant;
 
-import com.app.infra.application.request.restaurant.RestaurantRequest;
-
 import java.math.BigDecimal;
 
 public class MenuDTO {
@@ -14,7 +12,7 @@ public class MenuDTO {
 
     private BigDecimal price;
 
-    private RestaurantRequest restaurant;
+    private RestaurantDTO restaurant;
 
     private String image;
 
@@ -50,11 +48,11 @@ public class MenuDTO {
         this.price = price;
     }
 
-    public RestaurantRequest getRestaurant() {
+    public RestaurantDTO getRestaurant() {
         return restaurant;
     }
 
-    public void setRestaurant(RestaurantRequest restaurant) {
+    public void setRestaurant(RestaurantDTO restaurant) {
         this.restaurant = restaurant;
     }
 
@@ -63,6 +61,15 @@ public class MenuDTO {
     }
 
     public void setImage(String image) {
+        this.image = image;
+    }
+
+    public MenuDTO(Long id, String name, String description, BigDecimal price, RestaurantDTO restaurant, String image) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.restaurant = restaurant;
         this.image = image;
     }
 }
