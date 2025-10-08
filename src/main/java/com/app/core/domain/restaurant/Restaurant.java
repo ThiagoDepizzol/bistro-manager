@@ -12,7 +12,6 @@ public class Restaurant extends BaseEntity {
 
     private Location location;
 
-    //TODO: Validar se vai ser enum ou entity
     private String kitchenType;
 
     private User restaurantOwner;

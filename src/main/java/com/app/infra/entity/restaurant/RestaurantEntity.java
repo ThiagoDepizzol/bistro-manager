@@ -21,7 +21,6 @@ public class RestaurantEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private LocationEntity location;
 
-    //TODO: Validar se vai ser enum ou entity
     private String kitchenType;
 
     @JoinColumn(name = "restaurant_owner_usr_user_id")
