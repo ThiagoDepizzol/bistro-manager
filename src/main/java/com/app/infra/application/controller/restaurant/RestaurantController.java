@@ -34,13 +34,13 @@ public class RestaurantController {
     }
 
     @PostMapping
-    public ResponseEntity<RestaurantDTO> created(@RequestBody final RestaurantRequest json) {
+    public ResponseEntity<RestaurantDTO> created(@RequestBody final RestaurantRequest request) {
 
-        log.info("POST -> /res/restaurants -> {}", json);
+        log.info("POST -> /res/restaurants -> {}", request);
 
-        final Location location = locationMapper.mapToLocation(json.getLocation());
+        final Location location = locationMapper.mapToLocation(request.getLocation());
 
-        final Restaurant restaurant = restaurantMapper.mapToRestaurant(json, location);
+        final Restaurant restaurant = restaurantMapper.mapToRestaurant(request, location);
 
         final Restaurant restaurantCreated = restaurantUseCase.save(restaurant);
 
@@ -51,11 +51,11 @@ public class RestaurantController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RestaurantDTO> update(@PathVariable final Long id, @RequestBody final RestaurantRequest json) {
+    public ResponseEntity<RestaurantDTO> update(@PathVariable final Long id, @RequestBody final RestaurantRequest request) {
 
-        log.info("PUT -> /res/restaurants -> {}, {}", id, json);
+        log.info("PUT -> /res/restaurants -> {}, {}", id, request);
 
-        final Restaurant restaurant = restaurantMapper.mapToRestaurant(json, id);
+        final Restaurant restaurant = restaurantMapper.mapToRestaurant(request, id);
 
         final Restaurant restaurantCreated = restaurantUseCase.save(restaurant);
 

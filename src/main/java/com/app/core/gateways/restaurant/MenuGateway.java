@@ -1,0 +1,15 @@
+package com.app.core.gateways.restaurant;
+
+import com.app.core.domain.restaurant.Menu;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface MenuGateway {
+
+    Menu save(Menu menu);
+
+    Optional<Menu> findById(Long id);
+
+    List<Menu> findAllActive(int page, int size);
+}

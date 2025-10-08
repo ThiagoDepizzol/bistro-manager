@@ -13,17 +13,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class RestaurantMapper {
 
-    public Restaurant mapToRestaurant(@NotNull final RestaurantRequest json, @NotNull final Location location) {
+    public Restaurant mapToRestaurant(@NotNull final RestaurantRequest request, @NotNull final Location location) {
 
         return new Restaurant(
-                json.getName(),
+                request.getName(),
                 location,
-                json.getKitchenType(),
-                json.getRestaurantOwner()
+                request.getKitchenType(),
+                request.getRestaurantOwner()
         );
     }
 
-    public Restaurant mapToRestaurant(@NotNull final RestaurantRequest json, @NotNull final Long id) {
+    public Restaurant mapToRestaurant(@NotNull final RestaurantRequest request, @NotNull final Long id) {
+        return new Restaurant();
+    }
+
+    public Restaurant mapToRestaurant(@NotNull final RestaurantRequest request) {
         return new Restaurant();
     }
 
