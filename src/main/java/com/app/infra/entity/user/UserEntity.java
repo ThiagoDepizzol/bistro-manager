@@ -1,6 +1,7 @@
 package com.app.infra.entity.user;
 
 import com.app.infra.entity.base.BaseEntity;
+import com.app.infra.entity.roles.RoleEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -23,6 +24,10 @@ public class UserEntity extends BaseEntity {
 
     @NotNull
     private String password;
+
+    @JoinColumn(name = "adm_role_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private RoleEntity role;
 
     @Column(unique = true)
     private UUID loginHash;
@@ -61,6 +66,14 @@ public class UserEntity extends BaseEntity {
         this.password = password;
     }
 
+    public RoleEntity getRole() {
+        return role;
+    }
+
+    public void setRole(RoleEntity role) {
+        this.role = role;
+    }
+
     public UUID getLoginHash() {
         return loginHash;
     }
@@ -80,9 +93,11 @@ public class UserEntity extends BaseEntity {
     public UserEntity() {
     }
 
-    public UserEntity(String username, String login, String password) {
+    public UserEntity(Long id, String username, String login, String password, RoleEntity role) {
+        this.id = id;
         this.username = username;
         this.login = login;
         this.password = password;
+        this.role = role;
     }
 }

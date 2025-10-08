@@ -1,5 +1,7 @@
 package com.app.infra.application.request.user;
 
+import com.app.infra.application.request.roles.RoleRequest;
+
 public class UserRequest {
 
     private Long id;
@@ -10,6 +12,7 @@ public class UserRequest {
 
     private String password;
 
+    private RoleRequest role;
 
     public Long getId() {
         return id;
@@ -42,4 +45,13 @@ public class UserRequest {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public RoleRequest getRole() {
+        return role;
+    }
+
+    public void setRole(RoleRequest role) {
+        this.role = role;
+    }
+
 }

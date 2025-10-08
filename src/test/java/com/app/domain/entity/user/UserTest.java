@@ -1,7 +1,11 @@
 package com.app.domain.entity.user;
 
+import com.app.core.domain.enums.RoleType;
+import com.app.core.domain.role.Role;
 import com.app.core.domain.user.User;
+import com.app.core.gateways.roles.RoleGateway;
 import com.app.core.gateways.user.UserGateway;
+import com.app.core.usecases.roles.RoleUseCase;
 import com.app.core.usecases.user.UserUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,18 +21,22 @@ public class UserTest {
 
     private UserUseCase userUseCase;
 
+    private RoleUseCase roleUseCase;
+
     private final Long userId = 1L;
 
     @BeforeEach
     void setUp() {
 
-        final UserGateway gateway = Mockito.mock(UserGateway.class);
+        final UserGateway userGateway = Mockito.mock(UserGateway.class);
+
+        final RoleGateway roleGateway = Mockito.mock(RoleGateway.class);
 
         final Map<Long, User> db = new HashMap<>();
 
         final AtomicLong counter = new AtomicLong(1L);
 
-        Mockito.when(gateway.save(Mockito.any(User.class)))
+        Mockito.when(userGateway.save(Mockito.any(User.class)))
                 .thenAnswer(invocation -> {
 
                     final User user = invocation.getArgument(0);
@@ -41,7 +49,7 @@ public class UserTest {
                     return user;
                 });
 
-        Mockito.when(gateway.findById(userId))
+        Mockito.when(userGateway.findById(userId))
                 .thenAnswer(invocation -> {
 
                     final Long id = invocation.getArgument(0);
@@ -49,7 +57,7 @@ public class UserTest {
                     return Optional.ofNullable(db.get(id));
                 });
 
-        Mockito.when(gateway.findAllActive(Mockito.anyInt(), Mockito.anyInt()))
+        Mockito.when(userGateway.findAllActive(Mockito.anyInt(), Mockito.anyInt()))
                 .thenAnswer(invocation -> {
 
                     final int page = invocation.getArgument(0);
@@ -68,14 +76,19 @@ public class UserTest {
 
                 });
 
-        userUseCase = new UserUseCase(gateway);
+        userUseCase = new UserUseCase(userGateway);
+        roleUseCase = new RoleUseCase(roleGateway);
     }
 
     @DisplayName("Cria usuário com sucesso")
     @Test
     void testCreateUser() {
 
-        final User user = new User("Thiago Depizzol", "thiago.depizzol@fiap.com.br", "12345678");
+        final Role role = new Role(null, "Dono de restaurante", RoleType.RESTAURANT_OWNER, null);
+
+        final Role saveRole = roleUseCase.save(role);
+
+        final User user = new User(null, "Thiago Depizzol", "thiago.depizzol@fiap.com.br", "12345678", saveRole);
 
         final User saveUser = userUseCase.save(user);
 
@@ -83,15 +96,22 @@ public class UserTest {
         assertEquals("thiago.depizzol@fiap.com.br", saveUser.getLogin());
         assertEquals("12345678", saveUser.getPassword());
 
+        assertEquals("Dono de restaurante", saveRole.getName());
+        assertEquals(RoleType.RESTAURANT_OWNER, saveRole.getType());
+
     }
 
     @DisplayName("Atualizar usuário com sucesso")
     @Test
     void testUpdateUser() {
 
-        final User newUser = new User("Thiago Depizzol", "thiago.depizzol@fiap.com.br", "12345678");
+        final Role role = new Role(null, "Dono de restaurante", RoleType.RESTAURANT_OWNER, null);
 
-        final User saveUser = userUseCase.save(newUser);
+        final Role saveRole = roleUseCase.save(role);
+
+        final User user = new User(null, "Thiago Depizzol", "thiago.depizzol@fiap.com.br", "12345678", saveRole);
+
+        final User saveUser = userUseCase.save(user);
 
         saveUser.setUsername("Thiago Oliveira Depizzol");
 
@@ -107,9 +127,16 @@ public class UserTest {
     @Test
     void testGet() {
 
-        final User newUser = new User("Thiago Depizzol", "thiago.depizzol@fiap.com.br", "12345678");
+        final Role role = new Role(null, "Dono de restaurante", RoleType.RESTAURANT_OWNER, null);
 
-        final User savedUser = userUseCase.save(newUser);
+        final Role saveRole = roleUseCase.save(role);
+
+        final User newUser = new User(null, "Thiago Depizzol", "thiago.depizzol@fiap.com.br", "12345678", saveRole);
+
+        final User saveUser = userUseCase.save(newUser);
+
+        final User savedUser = userUseCase.save(saveUser);
+
         final Long id = savedUser.getId();
 
         final User user = userUseCase.findById(id)
@@ -124,10 +151,13 @@ public class UserTest {
     @DisplayName("Buscar usuário pela paginação")
     @Test
     void testGetAll() {
+        final Role restaurantOwner = roleUseCase.save(new Role(null, "Dono de restaurante", RoleType.RESTAURANT_OWNER, null));
+        final Role customer = roleUseCase.save(new Role(null, "Dono de restaurante", RoleType.CUSTOMER, null));
+        final Role systemAdmin = roleUseCase.save(new Role(null, "Dono de restaurante", RoleType.SYSTEM_ADMIN, null));
 
-        userUseCase.save(new User("Thiago Depizzol", "thiago.depizzol@fiap.com.br", "12345678"));
-        userUseCase.save(new User("Maria Silva", "maria.silva@fiap.com.br", "87654321"));
-        userUseCase.save(new User("João Souza", "joao.souza@fiap.com.br", "abcdef12"));
+        userUseCase.save(new User(null, "Thiago Depizzol", "thiago.depizzol@fiap.com.br", "12345678", restaurantOwner));
+        userUseCase.save(new User(null, "Maria Silva", "maria.silva@fiap.com.br", "87654321", customer));
+        userUseCase.save(new User(null, "João Souza", "joao.souza@fiap.com.br", "abcdef12", systemAdmin));
 
         final int page = 0;
         final int size = 10;
