@@ -35,7 +35,7 @@ public class UserController {
 
         final User user = userMapper.mapToUser(json);
 
-        final User useCreated = userUseCase.save(user);
+        final User useCreated = userUseCase.created(user);
 
         final UserDTO dto = userMapper.mapToDTO(useCreated);
 

@@ -49,7 +49,7 @@ public class RestaurantRepositoryGateway implements RestaurantGateway {
 
         final LocationEntity locationEntity = locationMapper.toEntity(location);
 
-        final UserEntity userEntity = userMapper.toEntity(restaurant.getRestaurantOwner());
+        final UserEntity userEntity = userMapper.toNewEntityWithRole(restaurant.getRestaurantOwner());
 
         final RestaurantEntity restaurantEntity = restaurantMapper.toEntity(restaurant, locationEntity, userEntity);
 

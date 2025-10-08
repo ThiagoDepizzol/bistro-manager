@@ -1,20 +1,26 @@
 package com.app.infra.gateway.user;
 
 import com.app.core.domain.user.User;
+import com.app.core.exception.DomainException;
 import com.app.core.gateways.user.UserGateway;
 import com.app.infra.application.mapper.user.UserMapper;
 import com.app.infra.entity.user.UserEntity;
 import com.app.infra.repository.user.UserRepository;
 import jakarta.validation.constraints.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class UserRepositoryGateway implements UserGateway {
+
+    private static final Logger log = LoggerFactory.getLogger(UserRepositoryGateway.class);
 
     private final UserMapper userMapper;
 
@@ -26,9 +32,31 @@ public class UserRepositoryGateway implements UserGateway {
     }
 
     @Override
+    public User created(@NotNull final User user) {
+
+        if (userRepository.findByEmail(user.getLogin()).isPresent()) {
+
+            log.info("Email incorreto");
+
+            throw new DomainException("Email já registrado no sistema");
+
+        }
+
+        final boolean hasRole = Objects.nonNull(user.getRole());
+
+        final UserEntity userEntity = hasRole ?
+                userMapper.toNewEntityWithRole(user) :
+                userMapper.toNewEntityWithoutRole(user);
+
+        final UserEntity savedEntity = userRepository.save(userEntity);
+
+        return userMapper.mapToUser(savedEntity);
+    }
+
+    @Override
     public User save(@NotNull final User user) {
 
-        final UserEntity userEntity = userMapper.toEntity(user);
+        final UserEntity userEntity = userMapper.toNewEntityWithRole(user);
 
         final UserEntity savedEntity = userRepository.save(userEntity);
 

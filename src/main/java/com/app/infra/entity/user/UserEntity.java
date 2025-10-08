@@ -100,4 +100,11 @@ public class UserEntity extends BaseEntity {
         this.password = password;
         this.role = role;
     }
+
+    public UserEntity(Long id, String username, String login, String password) {
+        this.id = id;
+        this.username = username;
+        this.login = login;
+        this.password = password;
+    }
 }
