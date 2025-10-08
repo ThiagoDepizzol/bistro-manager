@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "res_restaurants")
+@Table(name = "res_menus")
 public class MenuEntity extends BaseEntity {
 
     @Id

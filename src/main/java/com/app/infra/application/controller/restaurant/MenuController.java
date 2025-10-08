@@ -83,7 +83,7 @@ public class MenuController {
     @GetMapping
     public ResponseEntity<List<MenuDTO>> getAll(@RequestParam final int page, @RequestParam final int size) {
 
-        log.info("GET -> /usr/users -> {}, {}", page, size);
+        log.info("GET -> /res/menus -> {}, {}", page, size);
 
         final List<Menu> menus = menuUseCase.findAllActive(page, size);
 
