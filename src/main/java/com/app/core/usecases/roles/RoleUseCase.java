@@ -25,6 +25,11 @@ public class RoleUseCase {
         return roleGateway.findById(id);
     }
 
+    public Optional<Role> findOneSystemAdmin() {
+
+        return roleGateway.findOneSystemAdmin();
+    }
+
     public List<Role> findAllActive(final int page, final int size) {
 
         return roleGateway.findAllActive(page, size);

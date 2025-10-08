@@ -58,4 +58,11 @@ public class RoleRepositoryGateway implements RoleGateway {
                 .map(roleMapper::mapToRole)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Optional<Role> findOneSystemAdmin() {
+
+        return roleRepository.findOneByActive()
+                .map(roleMapper::mapToRole);
+    }
 }

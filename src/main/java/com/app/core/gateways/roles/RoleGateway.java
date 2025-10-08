@@ -11,5 +11,7 @@ public interface RoleGateway {
 
     Optional<Role> findById(Long id);
 
+    Optional<Role> findOneSystemAdmin();
+
     List<Role> findAllActive(int page, int size);
 }
