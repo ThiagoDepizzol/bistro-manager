@@ -37,12 +37,14 @@ public class RoleMapper {
     }
 
     public RoleEntity toEntity(Role role) {
+
         return new RoleEntity(
                 role.getId(),
                 role.getName(),
                 role.getType(),
                 role.getDescription()
         );
+
     }
 
     public RoleDTO mapToDTO(Role role) {

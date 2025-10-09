@@ -53,7 +53,7 @@ public class StartupRunner implements CommandLineRunner {
                                         role
                                 );
 
-                                userUseCase.save(userAdmin);
+                                userUseCase.created(userAdmin);
                             }
                         },
                         () -> {
@@ -77,7 +77,7 @@ public class StartupRunner implements CommandLineRunner {
                                         savedRole
                                 );
 
-                                userUseCase.save(userAdmin);
+                                userUseCase.created(userAdmin);
 
 
                             }

@@ -1,15 +1,14 @@
 package com.app.infra.application.mapper.user;
 
-import com.app.core.domain.role.Role;
 import com.app.core.domain.user.User;
-import com.app.core.utils.PasswordUtils;
 import com.app.infra.application.dto.user.UserDTO;
 import com.app.infra.application.mapper.roles.RoleMapper;
 import com.app.infra.application.request.user.UserRequest;
-import com.app.infra.entity.roles.RoleEntity;
 import com.app.infra.entity.user.UserEntity;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 @Component
 public class UserMapper {
@@ -20,128 +19,92 @@ public class UserMapper {
         this.roleMapper = roleMapper;
     }
 
-    public User toUserWithoutRole(@NotNull final UserRequest request) {
-        return new User(
-                request.getUsername(),
-                request.getLogin(),
-                PasswordUtils.encryptPassword(request.getPassword())
-        );
+    public User map(@NotNull final UserRequest request) {
+
+        final User user = new User();
+
+        user.setId(request.getId());
+        user.setUsername(request.getUsername());
+        user.setLogin(request.getLogin());
+        user.setPassword(request.getPassword());
+
+        if (Objects.nonNull(request.getRole())) {
+
+            user.setRole(roleMapper.mapToRole(request.getRole()));
+
+        }
+
+        return user;
     }
 
-    public User toUserWithRole(@NotNull final UserRequest request) {
+    public User map(@NotNull final UserRequest request, @NotNull final Long id) {
 
-        final Role role = roleMapper.mapToRole(request.getRole());
+        final User user = new User();
 
-        return new User(
-                request.getUsername(),
-                request.getLogin(),
-                PasswordUtils.encryptPassword(request.getPassword()),
-                role
-        );
+        user.setId(id);
+        user.setUsername(request.getUsername());
+        user.setLogin(request.getLogin());
+        user.setPassword(request.getPassword());
 
+        if (Objects.nonNull(request.getRole())) {
+
+            user.setRole(roleMapper.mapToRole(request.getRole()));
+
+        }
+
+        return user;
     }
 
-    public User toUserWithoutRole(@NotNull final UserRequest request, @NotNull final Long id) {
-        return new User(
-                id,
-                request.getUsername(),
-                request.getLogin(),
-                PasswordUtils.encryptPassword(request.getPassword())
-        );
+    public User map(@NotNull final UserEntity entity) {
+
+        final User user = new User();
+
+        user.setId(entity.getId());
+        user.setUsername(entity.getUsername());
+        user.setLogin(entity.getLogin());
+        user.setPassword(entity.getPassword());
+
+        if (Objects.nonNull(entity.getRole())) {
+
+            user.setRole(roleMapper.mapToRole(entity.getRole()));
+
+        }
+
+        return user;
     }
 
-    public User toUserWithRole(@NotNull final UserRequest request, @NotNull final Long id) {
+    public UserEntity toEntity(@NotNull final User user) {
 
-        final Role role = roleMapper.mapToRole(request.getRole());
+        final UserEntity entity = new UserEntity();
 
-        return new User(
-                id,
-                request.getUsername(),
-                request.getLogin(),
-                PasswordUtils.encryptPassword(request.getPassword()),
-                role
-        );
+        entity.setId(user.getId());
+        entity.setUsername(user.getUsername());
+        entity.setLogin(user.getLogin());
+        entity.setPassword(user.getPassword());
 
+        if (Objects.nonNull(user.getRole())) {
+
+            entity.setRole(roleMapper.toEntity(user.getRole()));
+
+        }
+
+        return entity;
     }
 
-    public User toUserEntityWithoutRole(@NotNull final UserRequest request, @NotNull final Long id) {
+    public UserDTO toDTO(@NotNull final User user) {
 
-        return new User(
-                id,
-                request.getUsername(),
-                request.getLogin(),
-                PasswordUtils.encryptPassword(request.getPassword())
-        );
+        final UserDTO dto = new UserDTO();
+
+        dto.setId(user.getId());
+        dto.setUsername(user.getUsername());
+
+        if (Objects.nonNull(user.getRole())) {
+
+            dto.setRole(roleMapper.mapToDTO(user.getRole()));
+
+        }
+
+        return dto;
     }
-
-    public User toUserEntityWithRole(@NotNull final UserEntity entity, @NotNull final Long id) {
-
-        final Role role = roleMapper.mapToRole(entity.getRole());
-
-        return new User(
-                entity.getId(),
-                entity.getUsername(),
-                entity.getLogin(),
-                entity.getPassword(),
-                role
-        );
-
-    }
-
-    public User toUserEntityWithoutRole(@NotNull final UserEntity entity) {
-        return new User(
-                entity.getId(),
-                entity.getUsername(),
-                entity.getLogin(),
-                entity.getPassword()
-        );
-    }
-
-    public User toUserEntityWithRole(@NotNull final UserEntity entity) {
-
-        final Role role = roleMapper.mapToRole(entity.getRole());
-
-        return new User(
-                entity.getId(),
-                entity.getUsername(),
-                entity.getLogin(),
-                entity.getPassword(),
-                role
-        );
-
-    }
-
-    public UserEntity toNewEntityWithoutRole(@NotNull final User user) {
-
-        return new UserEntity(
-                user.getId(),
-                user.getUsername(),
-                user.getLogin(),
-                user.getPassword()
-        );
-
-    }
-
-    public UserEntity toNewEntityWithRole(@NotNull final User user) {
-
-        final RoleEntity role = roleMapper.toEntity(user.getRole());
-
-        return new UserEntity(
-                user.getId(),
-                user.getUsername(),
-                user.getLogin(),
-                user.getPassword(),
-                role
-        );
-
-    }
-
-    public UserDTO mapToDTO(@NotNull final User user) {
-        return new UserDTO(
-                user.getId(),
-                user.getUsername()
-        );
-    }
-
 
 }

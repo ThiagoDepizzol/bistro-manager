@@ -24,11 +24,6 @@ public class UserUseCase {
         return userGateway.update(user);
     }
 
-    public User save(final User user) {
-
-        return userGateway.save(user);
-    }
-
     public Optional<User> findById(final Long id) {
 
         return userGateway.findById(id);

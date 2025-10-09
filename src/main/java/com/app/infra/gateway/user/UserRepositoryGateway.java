@@ -10,12 +10,10 @@ import com.app.infra.repository.user.UserRepository;
 import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,15 +38,11 @@ public class UserRepositoryGateway implements UserGateway {
 
         userValidator.validateUserCreation(user);
 
-        final boolean hasRole = Objects.nonNull(user.getRole());
+        final UserEntity userEntity = userMapper.toEntity(user);
 
-        final UserEntity userEntity = hasRole ?
-                userMapper.toNewEntityWithRole(user) :
-                userMapper.toNewEntityWithoutRole(user);
+        final UserEntity createdEntity = userRepository.save(userEntity);
 
-        final UserEntity savedEntity = userRepository.save(userEntity);
-
-        return userMapper.toUserEntityWithRole(savedEntity);
+        return userMapper.map(createdEntity);
     }
 
     @Override
@@ -56,36 +50,22 @@ public class UserRepositoryGateway implements UserGateway {
 
         userValidator.validateUserUpdate(user);
 
-        final boolean hasRole = Objects.nonNull(user.getRole());
+        final UserEntity userEntity = userMapper.toEntity(user);
 
-        final UserEntity userEntity = hasRole ?
-                userMapper.toNewEntityWithRole(user) :
-                userMapper.toNewEntityWithoutRole(user);
+        final UserEntity updateEntity = userRepository.save(userEntity);
 
-        final UserEntity savedEntity = userRepository.save(userEntity);
-
-        return userMapper.toUserEntityWithoutRole(savedEntity);
-    }
-
-    @Override
-    public User save(@NotNull final User user) {
-
-        final UserEntity userEntity = userMapper.toNewEntityWithRole(user);
-
-        final UserEntity savedEntity = userRepository.save(userEntity);
-
-        return userMapper.toUserEntityWithRole(savedEntity);
+        return userMapper.map(updateEntity);
     }
 
     @Override
     public Optional<User> findById(@NotNull final Long id) {
 
-        final UserEntity savedEntity = userRepository.findById(id)
+        final UserEntity entity = userRepository.findById(id)
                 .orElseThrow(() -> new DomainException("Usuário não encontrado"));
 
-        final User user = userMapper.toUserEntityWithoutRole(savedEntity);
+        final User user = userMapper.map(entity);
 
-        return Optional.of(user);
+        return Optional.ofNullable(user);
     }
 
     @Override
@@ -93,11 +73,9 @@ public class UserRepositoryGateway implements UserGateway {
 
         final Pageable pageable = PageRequest.of(page, size);
 
-        final Page<UserEntity> entities = userRepository.findAllByActive(pageable);
-
-        return entities
+        return userRepository.findAllByActive(pageable)
                 .stream()
-                .map(userMapper::toUserEntityWithoutRole)
+                .map(userMapper::map)
                 .collect(Collectors.toList());
     }
 }

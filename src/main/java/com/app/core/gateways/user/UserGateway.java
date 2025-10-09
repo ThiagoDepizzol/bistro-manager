@@ -11,8 +11,6 @@ public interface UserGateway {
 
     User update(User user);
 
-    User save(User user);
-
     Optional<User> findById(Long id);
 
     List<User> findAllActive(int page, int size);

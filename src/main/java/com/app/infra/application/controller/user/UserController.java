@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -34,15 +33,11 @@ public class UserController {
 
         log.info("POST -> /usr/users -> {}", request);
 
-        final boolean hasRole = Objects.nonNull(request.getRole());
+        final User user = userMapper.map(request);
 
-        final User user = hasRole ?
-                userMapper.toUserWithRole(request) :
-                userMapper.toUserWithoutRole(request);
+        final User userCreated = userUseCase.created(user);
 
-        final User useCreated = userUseCase.created(user);
-
-        final UserDTO dto = userMapper.mapToDTO(useCreated);
+        final UserDTO dto = userMapper.toDTO(userCreated);
 
         return ResponseEntity.ok(dto);
 
@@ -53,15 +48,11 @@ public class UserController {
 
         log.info("PUT -> /usr/users -> {}, {}", id, request);
 
-        final boolean hasRole = Objects.nonNull(request.getRole());
+        final User user = userMapper.map(request, id);
 
-        final User user = hasRole ?
-                userMapper.toUserWithRole(request, id) :
-                userMapper.toUserWithoutRole(request, id);
+        final User userUpdate = userUseCase.update(user);
 
-        final User useCreated = userUseCase.update(user);
-
-        final UserDTO dto = userMapper.mapToDTO(useCreated);
+        final UserDTO dto = userMapper.toDTO(userUpdate);
 
         return ResponseEntity.ok(dto);
 
@@ -73,7 +64,7 @@ public class UserController {
         log.info("GET -> /usr/users -> {}", id);
 
         final UserDTO dto = userUseCase.findById(id)
-                .map(userMapper::mapToDTO)
+                .map(userMapper::toDTO)
                 .orElseThrow(() -> new IllegalStateException("User not found"));
 
         return ResponseEntity.ok(dto);
@@ -89,7 +80,7 @@ public class UserController {
 
         final List<UserDTO> dtos = users
                 .stream()
-                .map(userMapper::mapToDTO)
+                .map(userMapper::toDTO)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(dtos);
