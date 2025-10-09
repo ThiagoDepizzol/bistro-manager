@@ -1,67 +1,65 @@
 package com.app.infra.application.mapper.location;
 
 import com.app.core.domain.location.Location;
+import com.app.core.exception.DomainException;
 import com.app.infra.application.request.location.LocationRequest;
 import com.app.infra.entity.location.LocationEntity;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class LocationMapper {
 
-    public Location mapToLocation(@NotNull final LocationRequest request) {
+    public Location map(@NotNull final LocationRequest request) {
 
-        return new Location(
-                request.getAddress(),
-                request.getNumber(),
-                request.getNeighborhood(),
-                request.getComplement(),
-                request.getZipCode(),
-                request.getCity(),
-                request.getState()
-        );
+        final Location location = new Location();
+
+        location.setId(request.getId());
+        location.setAddress(request.getAddress());
+        location.setNumber(request.getNumber());
+        location.setNeighborhood(request.getNeighborhood());
+        location.setComplement(request.getComplement());
+        location.setZipCode(request.getZipCode());
+        location.setCity(request.getCity());
+        location.setState(request.getState());
+
+        return location;
     }
 
-    public Location mapToLocation(@NotNull final LocationEntity entity) {
+    public Location map(@NotNull final LocationEntity entity) {
 
-        return new Location(
-                entity.getId(),
-                entity.getAddress(),
-                entity.getNumber(),
-                entity.getNeighborhood(),
-                entity.getComplement(),
-                entity.getZipCode(),
-                entity.getCity(),
-                entity.getState()
-        );
+        final Location location = new Location();
+
+        location.setId(entity.getId());
+        location.setAddress(entity.getAddress());
+        location.setNumber(entity.getNumber());
+        location.setNeighborhood(entity.getNeighborhood());
+        location.setComplement(entity.getComplement());
+        location.setZipCode(entity.getZipCode());
+        location.setCity(entity.getCity());
+        location.setState(entity.getState());
+
+        return location;
     }
 
     public LocationEntity toEntity(@NotNull final Location location) {
 
-        return new LocationEntity(
-                location.getId(),
-                location.getAddress(),
-                location.getNumber(),
-                location.getNeighborhood(),
-                location.getComplement(),
-                location.getZipCode(),
-                location.getCity(),
-                location.getState()
-        );
-    }
+        final LocationEntity entity = new LocationEntity();
 
-    public LocationEntity toEntity(@NotNull final Location location, @NotNull final String zipcode) {
+        entity.setId(location.getId());
+        entity.setAddress(location.getAddress());
+        entity.setNumber(location.getNumber());
+        entity.setNeighborhood(location.getNeighborhood());
+        entity.setComplement(location.getComplement());
+        entity.setZipCode(Optional.ofNullable(location.getZipCode())
+                .map(code -> code.replaceAll("[^a-zA-Z0-9]", ""))
+                .orElseThrow(() -> new DomainException("CEP não encontrado")));
+        entity.setCity(location.getCity());
+        entity.setState(location.getState());
 
-        return new LocationEntity(
-                location.getId(),
-                location.getAddress(),
-                location.getNumber(),
-                location.getNeighborhood(),
-                location.getComplement(),
-                zipcode,
-                location.getCity(),
-                location.getState()
-        );
+        return entity;
     }
 
 }
