@@ -22,30 +22,47 @@ public class UserMapper {
         this.roleMapper = roleMapper;
     }
 
-    public User mapToUser(@NotNull final UserRequest request) {
+    public User toUserWithoutRole(@NotNull final UserRequest request) {
+        return new User(
+                request.getUsername(),
+                request.getLogin(),
+                PasswordUtils.encryptPassword(request.getPassword())
+        );
+    }
 
+    public User toUserWithRole(@NotNull final UserRequest request) {
 
-        if (Objects.nonNull(request.getRole())) {
+        final Role role = roleMapper.mapToRole(request.getRole());
 
-            final Role role = roleMapper.mapToRole(request.getRole());
+        return new User(
+                request.getUsername(),
+                request.getLogin(),
+                PasswordUtils.encryptPassword(request.getPassword()),
+                role
+        );
 
-            return new User(
-                    request.getUsername(),
-                    request.getLogin(),
-                    PasswordUtils.encryptPassword(request.getPassword()),
-                    role
-            );
+    }
 
-        } else {
+    public User toUserWithoutRole(@NotNull final UserRequest request, @NotNull final Long id) {
+        return new User(
+                id,
+                request.getUsername(),
+                request.getLogin(),
+                PasswordUtils.encryptPassword(request.getPassword())
+        );
+    }
 
-            return new User(
-                    request.getUsername(),
-                    request.getLogin(),
-                    PasswordUtils.encryptPassword(request.getPassword())
-            );
+    public User toUserWithRole(@NotNull final UserRequest request, @NotNull final Long id) {
 
-        }
+        final Role role = roleMapper.mapToRole(request.getRole());
 
+        return new User(
+                id,
+                request.getUsername(),
+                request.getLogin(),
+                PasswordUtils.encryptPassword(request.getPassword()),
+                role
+        );
 
     }
 

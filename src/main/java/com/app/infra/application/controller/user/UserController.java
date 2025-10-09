@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -29,11 +30,15 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> created(@RequestBody final UserRequest json) {
+    public ResponseEntity<UserDTO> created(@RequestBody final UserRequest request) {
 
-        log.info("POST -> /usr/users -> {}", json);
+        log.info("POST -> /usr/users -> {}", request);
 
-        final User user = userMapper.mapToUser(json);
+        final boolean hasRole = Objects.nonNull(request.getRole());
+
+        final User user = hasRole ?
+                userMapper.toUserWithRole(request) :
+                userMapper.toUserWithoutRole(request);
 
         final User useCreated = userUseCase.created(user);
 
@@ -44,13 +49,17 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> update(@PathVariable final Long id, @RequestBody final UserRequest json) {
+    public ResponseEntity<UserDTO> update(@PathVariable final Long id, @RequestBody final UserRequest request) {
 
-        log.info("PUT -> /usr/users -> {}, {}", id, json);
+        log.info("PUT -> /usr/users -> {}, {}", id, request);
 
-        final User user = userMapper.mapToUser(json, id);
+        final boolean hasRole = Objects.nonNull(request.getRole());
 
-        final User useCreated = userUseCase.save(user);
+        final User user = hasRole ?
+                userMapper.toUserWithRole(request, id) :
+                userMapper.toUserWithoutRole(request, id);
+
+        final User useCreated = userUseCase.update(user);
 
         final UserDTO dto = userMapper.mapToDTO(useCreated);
 

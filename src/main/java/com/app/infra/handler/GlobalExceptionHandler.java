@@ -16,8 +16,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleEmailAlreadyExists(DomainException ex) {
 
         Map<String, String> response = new HashMap<>();
-        response.put("error", ex.getMessage());
+        response.put("message", ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+
     }
 }

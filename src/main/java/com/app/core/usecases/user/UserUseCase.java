@@ -19,6 +19,11 @@ public class UserUseCase {
         return userGateway.created(user);
     }
 
+    public User update(final User user) {
+
+        return userGateway.update(user);
+    }
+
     public User save(final User user) {
 
         return userGateway.save(user);

@@ -4,6 +4,7 @@ import com.app.core.domain.user.User;
 import com.app.core.exception.DomainException;
 import com.app.core.gateways.user.UserGateway;
 import com.app.infra.application.mapper.user.UserMapper;
+import com.app.infra.application.validator.user.UserValidator;
 import com.app.infra.entity.user.UserEntity;
 import com.app.infra.repository.user.UserRepository;
 import jakarta.validation.constraints.NotNull;
@@ -26,21 +27,34 @@ public class UserRepositoryGateway implements UserGateway {
 
     private final UserRepository userRepository;
 
-    public UserRepositoryGateway(final UserMapper userMapper, final UserRepository userRepository) {
+    private final UserValidator userValidator;
+
+    public UserRepositoryGateway(final UserMapper userMapper, final UserRepository userRepository, final UserValidator userValidator) {
         this.userMapper = userMapper;
         this.userRepository = userRepository;
+        this.userValidator = userValidator;
     }
 
     @Override
     public User created(@NotNull final User user) {
 
-        if (userRepository.findByEmail(user.getLogin()).isPresent()) {
+        userValidator.validateUserCreation(user);
 
-            log.info("Email incorreto");
+        final boolean hasRole = Objects.nonNull(user.getRole());
 
-            throw new DomainException("Email já registrado no sistema");
+        final UserEntity userEntity = hasRole ?
+                userMapper.toNewEntityWithRole(user) :
+                userMapper.toNewEntityWithoutRole(user);
 
-        }
+        final UserEntity savedEntity = userRepository.save(userEntity);
+
+        return userMapper.mapToUser(savedEntity);
+    }
+
+    @Override
+    public User update(@NotNull final User user) {
+
+        userValidator.validateUserUpdate(user);
 
         final boolean hasRole = Objects.nonNull(user.getRole());
 
@@ -67,7 +81,7 @@ public class UserRepositoryGateway implements UserGateway {
     public Optional<User> findById(@NotNull final Long id) {
 
         final UserEntity savedEntity = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("User not found"));
+                .orElseThrow(() -> new DomainException("Usuário não encontrado"));
 
         final User user = userMapper.mapToUser(savedEntity);
 
