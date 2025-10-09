@@ -17,12 +17,12 @@ public class RoleUseCase {
 
     public Role created(final Role role) {
 
-        return roleGateway.save(role);
+        return roleGateway.created(role);
     }
 
     public Role update(final Role role) {
 
-        return roleGateway.save(role);
+        return roleGateway.update(role);
     }
 
     public Optional<Role> findById(final Long id) {

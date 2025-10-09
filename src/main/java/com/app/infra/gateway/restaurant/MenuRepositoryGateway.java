@@ -1,15 +1,11 @@
 package com.app.infra.gateway.restaurant;
 
 import com.app.core.domain.restaurant.Menu;
-import com.app.core.domain.restaurant.Restaurant;
 import com.app.core.gateways.restaurant.MenuGateway;
 import com.app.infra.application.mapper.restaurant.MenuMapper;
-import com.app.infra.application.mapper.restaurant.RestaurantMapper;
 import com.app.infra.entity.restaurant.MenuEntity;
-import com.app.infra.entity.restaurant.RestaurantEntity;
 import com.app.infra.repository.restaurant.MenuRepository;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -19,30 +15,33 @@ import java.util.stream.Collectors;
 
 public class MenuRepositoryGateway implements MenuGateway {
 
-    private final RestaurantMapper restaurantMapper;
-
     private final MenuRepository menuRepository;
 
     private final MenuMapper menuMapper;
 
-    public MenuRepositoryGateway(final RestaurantMapper restaurantMapper, final MenuRepository menuRepository, final MenuMapper menuMapper) {
-        this.restaurantMapper = restaurantMapper;
+    public MenuRepositoryGateway(final MenuRepository menuRepository, final MenuMapper menuMapper) {
         this.menuRepository = menuRepository;
         this.menuMapper = menuMapper;
     }
 
     @Override
-    public Menu save(@NotNull final Menu menu) {
+    public Menu created(@NotNull final Menu menu) {
 
-        final RestaurantEntity restaurantEntity = restaurantMapper.toEntity(menu.getRestaurant());
+        final MenuEntity menuEntity = menuMapper.toEntity(menu);
 
-        final MenuEntity menuEntity = menuMapper.toEntity(menu, restaurantEntity);
+        final MenuEntity createdEntity = menuRepository.save(menuEntity);
 
-        final MenuEntity savedEntity = menuRepository.save(menuEntity);
+        return menuMapper.map(createdEntity);
+    }
 
-        final Restaurant restaurant = restaurantMapper.mapToRestaurant(savedEntity.getRestaurant());
+    @Override
+    public Menu update(@NotNull final Menu menu) {
 
-        return menuMapper.mapToManu(savedEntity, restaurant);
+        final MenuEntity menuEntity = menuMapper.toEntity(menu);
+
+        final MenuEntity updateEntity = menuRepository.save(menuEntity);
+
+        return menuMapper.map(updateEntity);
     }
 
     @Override
@@ -51,9 +50,7 @@ public class MenuRepositoryGateway implements MenuGateway {
         final MenuEntity savedEntity = menuRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Menu not found"));
 
-        final Restaurant restaurant = restaurantMapper.mapToRestaurant(savedEntity.getRestaurant());
-
-        final Menu menu = menuMapper.mapToManu(savedEntity, restaurant);
+        final Menu menu = menuMapper.map(savedEntity);
 
         return Optional.of(menu);
     }
@@ -63,17 +60,9 @@ public class MenuRepositoryGateway implements MenuGateway {
 
         final Pageable pageable = PageRequest.of(page, size);
 
-        final Page<MenuEntity> entities = menuRepository.findAllByActive(pageable);
-
-        return entities
+        return menuRepository.findAllByActive(pageable)
                 .stream()
-                .map(entity -> {
-
-                    final Restaurant restaurant = restaurantMapper.mapToRestaurant(entity.getRestaurant());
-
-                    return menuMapper.mapToManu(entity, restaurant);
-
-                })
+                .map(menuMapper::map)
                 .collect(Collectors.toList());
     }
 }

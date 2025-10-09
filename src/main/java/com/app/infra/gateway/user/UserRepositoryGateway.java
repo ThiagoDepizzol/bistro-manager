@@ -8,8 +8,6 @@ import com.app.infra.application.validator.user.UserValidator;
 import com.app.infra.entity.user.UserEntity;
 import com.app.infra.repository.user.UserRepository;
 import jakarta.validation.constraints.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -18,8 +16,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class UserRepositoryGateway implements UserGateway {
-
-    private static final Logger log = LoggerFactory.getLogger(UserRepositoryGateway.class);
 
     private final UserMapper userMapper;
 

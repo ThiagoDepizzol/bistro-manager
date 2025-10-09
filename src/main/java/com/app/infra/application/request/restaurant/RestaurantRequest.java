@@ -1,7 +1,7 @@
 package com.app.infra.application.request.restaurant;
 
-import com.app.core.domain.user.User;
 import com.app.infra.application.request.location.LocationRequest;
+import com.app.infra.application.request.user.UserRequest;
 
 public class RestaurantRequest {
 
@@ -13,7 +13,7 @@ public class RestaurantRequest {
 
     private String kitchenType;
 
-    private User restaurantOwner;
+    private UserRequest restaurantOwner;
 
     public Long getId() {
         return id;
@@ -47,11 +47,14 @@ public class RestaurantRequest {
         this.kitchenType = kitchenType;
     }
 
-    public User getRestaurantOwner() {
+    public UserRequest getRestaurantOwner() {
         return restaurantOwner;
     }
 
-    public void setRestaurantOwner(User restaurantOwner) {
+    public void setRestaurantOwner(UserRequest restaurantOwner) {
         this.restaurantOwner = restaurantOwner;
+    }
+
+    public RestaurantRequest() {
     }
 }

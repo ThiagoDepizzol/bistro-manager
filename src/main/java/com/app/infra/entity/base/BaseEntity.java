@@ -11,14 +11,14 @@ public abstract class BaseEntity {
     @Column(nullable = false)
     private Boolean active = true;
 
-    public BaseEntity() {
-    }
-
     public Boolean isActive() {
         return active;
     }
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public BaseEntity() {
     }
 }

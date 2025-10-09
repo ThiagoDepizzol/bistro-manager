@@ -1,5 +1,6 @@
 package com.app.infra.gateway.authentication;
 
+import com.app.core.exception.DomainException;
 import com.app.core.gateways.authentication.AuthenticationGateway;
 import com.app.core.utils.PasswordUtils;
 import com.app.infra.application.dto.authentication.LoginDTO;
@@ -29,10 +30,9 @@ public class AuthenticationRepositoryGateway implements AuthenticationGateway {
         final UserEntity userEntity = userRepository.findByEmail(dto.getLogin())
                 .orElseThrow(() -> {
 
-                    log.info("Email incorreto");
+                    log.info("Email não encontrado");
 
-                    //TODO: Refatorar regra de exception
-                    return new IllegalStateException("Usuário ou senha inválidos");
+                    return new DomainException("Usuário ou senha inválidos");
                 });
 
 
@@ -41,10 +41,9 @@ public class AuthenticationRepositoryGateway implements AuthenticationGateway {
         if (!isPasswordCorrect) {
 
 
-            log.info("Senha incorreto");
+            log.info("Senha incorreta");
 
-            //TODO: Refatorar regra de exception
-            throw new IllegalStateException("Usuário ou senha inválidos");
+            throw new DomainException("Usuário ou senha inválidos");
 
         }
 
@@ -63,10 +62,9 @@ public class AuthenticationRepositoryGateway implements AuthenticationGateway {
         final UserEntity userEntity = userRepository.findByEmail(login)
                 .orElseThrow(() -> {
 
-                    log.info("Email incorreto");
+                    log.info("Email não encontrado");
 
-                    //TODO: Refatorar regra de exception
-                    return new IllegalStateException("Usuário ou senha inválidos");
+                    return new DomainException("Usuário ou senha inválidos");
                 });
 
         final boolean isPasswordCorrect = PasswordUtils.matches(password, userEntity.getPassword());
@@ -74,10 +72,9 @@ public class AuthenticationRepositoryGateway implements AuthenticationGateway {
         if (!isPasswordCorrect) {
 
 
-            log.info("Senha incorreto");
+            log.info("Senha incorreta");
 
-            //TODO: Refatorar regra de exception
-            throw new IllegalStateException("Usuário ou senha inválidos");
+            throw new DomainException("Usuário ou senha inválidos");
 
         }
 

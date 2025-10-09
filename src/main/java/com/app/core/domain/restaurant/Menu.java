@@ -66,21 +66,4 @@ public class Menu {
 
     public Menu() {
     }
-
-    public Menu(Long id, String name, String description, BigDecimal price, Restaurant restaurant, String image) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.restaurant = restaurant;
-        this.image = image;
-    }
-
-    public Menu(String name, String description, BigDecimal price, Restaurant restaurant, String image) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.restaurant = restaurant;
-        this.image = image;
-    }
 }

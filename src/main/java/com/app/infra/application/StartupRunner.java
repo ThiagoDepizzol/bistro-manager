@@ -40,42 +40,39 @@ public class StartupRunner implements CommandLineRunner {
         roleRepository.findOneByActive()
                 .ifPresentOrElse(entity -> {
 
-                            final Role role = roleMapper.mapToRole(entity);
+                            final Role role = roleMapper.map(entity);
 
 
                             if (userRepository.findByEmail(email).isEmpty()) {
 
-                                final User userAdmin = new User(
-                                        null,
-                                        "Administrador Administrador",
-                                        email,
-                                        "admin",
-                                        role
-                                );
+                                final User userAdmin = new User();
+
+                                userAdmin.setUsername("Administrador Administrador");
+                                userAdmin.setLogin(email);
+                                userAdmin.setPassword("admin");
+                                userAdmin.setRole(role);
 
                                 userUseCase.created(userAdmin);
                             }
                         },
                         () -> {
 
-                            final Role newRole = new Role(
-                                    null,
-                                    "System admin",
-                                    RoleType.SYSTEM_ADMIN,
-                                    "Perfil de acesso do administrado do sistema"
-                            );
+                            final Role newRole = new Role();
 
-                            final Role savedRole = roleUseCase.save(newRole);
+                            newRole.setName("System admin");
+                            newRole.setType(RoleType.SYSTEM_ADMIN);
+                            newRole.setDescription("Perfil de acesso do administrado do sistema");
+
+                            final Role savedRole = roleUseCase.created(newRole);
 
                             if (userRepository.findByEmail(email).isEmpty()) {
 
-                                final User userAdmin = new User(
-                                        null,
-                                        "Administrador Administrador",
-                                        email,
-                                        "admin",
-                                        savedRole
-                                );
+                                final User userAdmin = new User();
+
+                                userAdmin.setUsername("Administrador Administrador");
+                                userAdmin.setLogin(email);
+                                userAdmin.setPassword("admin");
+                                userAdmin.setRole(savedRole);
 
                                 userUseCase.created(userAdmin);
 

@@ -1,16 +1,7 @@
-package com.app.infra.entity.location;
+package com.app.infra.application.dto.location;
 
-import com.app.core.domain.base.BaseEntity;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+public class LocationDTO {
 
-@Entity
-@Table(name = "loc_locations")
-public class LocationEntity extends BaseEntity {
-
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String address;
@@ -21,8 +12,6 @@ public class LocationEntity extends BaseEntity {
 
     private String complement;
 
-    @NotNull
-    @Column(nullable = false)
     private String zipCode;
 
     private String city;
@@ -93,6 +82,6 @@ public class LocationEntity extends BaseEntity {
         this.state = state;
     }
 
-    public LocationEntity() {
+    public LocationDTO() {
     }
 }

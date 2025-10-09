@@ -46,11 +46,4 @@ public class RoleDTO {
 
     public RoleDTO() {
     }
-
-    public RoleDTO(Long id, String name, RoleType type, String description) {
-        this.id = id;
-        this.name = name;
-        this.type = type;
-        this.description = description;
-    }
 }

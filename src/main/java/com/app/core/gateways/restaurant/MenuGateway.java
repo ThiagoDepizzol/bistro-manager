@@ -7,7 +7,9 @@ import java.util.Optional;
 
 public interface MenuGateway {
 
-    Menu save(Menu menu);
+    Menu created(Menu menu);
+
+    Menu update(Menu menu);
 
     Optional<Menu> findById(Long id);
 

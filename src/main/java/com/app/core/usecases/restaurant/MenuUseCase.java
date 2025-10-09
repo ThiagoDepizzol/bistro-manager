@@ -14,9 +14,14 @@ public class MenuUseCase {
         this.menuGateway = menuGateway;
     }
 
-    public Menu save(final Menu menu) {
+    public Menu created(final Menu menu) {
 
-        return menuGateway.save(menu);
+        return menuGateway.created(menu);
+    }
+
+    public Menu update(final Menu menu) {
+
+        return menuGateway.update(menu);
     }
 
     public Optional<Menu> findById(final Long id) {

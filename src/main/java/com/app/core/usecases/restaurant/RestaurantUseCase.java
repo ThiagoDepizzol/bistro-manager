@@ -14,9 +14,14 @@ public class RestaurantUseCase {
         this.restaurantGateway = restaurantGateway;
     }
 
-    public Restaurant save(final Restaurant restaurant) {
+    public Restaurant created(final Restaurant restaurant) {
 
-        return restaurantGateway.save(restaurant);
+        return restaurantGateway.created(restaurant);
+    }
+
+    public Restaurant update(final Restaurant restaurant) {
+
+        return restaurantGateway.update(restaurant);
     }
 
     public Optional<Restaurant> findById(final Long id) {

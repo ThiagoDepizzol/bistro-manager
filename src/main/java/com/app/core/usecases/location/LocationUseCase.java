@@ -15,4 +15,9 @@ public class LocationUseCase {
 
         return locationGateway.save(location);
     }
+
+    public Location getOneByZipCodeOrCreated(final Location location) {
+
+        return locationGateway.getOneByZipCodeOrCreated(location);
+    }
 }

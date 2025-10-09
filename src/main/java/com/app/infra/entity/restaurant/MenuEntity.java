@@ -77,13 +77,4 @@ public class MenuEntity extends BaseEntity {
 
     public MenuEntity() {
     }
-
-    public MenuEntity(Long id, String name, String description, BigDecimal price, RestaurantEntity restaurant, String image) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.restaurant = restaurant;
-        this.image = image;
-    }
 }

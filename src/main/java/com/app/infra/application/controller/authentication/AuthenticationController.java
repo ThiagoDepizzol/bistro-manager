@@ -32,11 +32,11 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody final LoginRequest json) {
+    public ResponseEntity<?> login(@RequestBody final LoginRequest request) {
 
-        log.info("POST -> /login -> {} ", json);
+        log.info("POST -> /login -> {} ", request);
 
-        final LoginDTO dto = authenticationMapper.mapToLoginDTO(json);
+        final LoginDTO dto = authenticationMapper.map(request);
 
         authenticationUseCase.authentication(dto);
 

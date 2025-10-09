@@ -23,15 +23,32 @@ public class LocationRepositoryGateway implements LocationGateway {
     @Override
     public Location save(@NotNull final Location location) {
 
-        final String zipLocation = Optional.ofNullable(location.getZipCode())
-                .map(zipCode -> zipCode.replaceAll("[^a-zA-Z0-9]", ""))
-                .orElse(null);
-
-        final LocationEntity entity = locationMapper.toEntity(location, zipLocation);
+        final LocationEntity entity = locationMapper.toEntity(location);
 
         final LocationEntity savedLocation = locationRepository.save(entity);
 
-        return locationMapper.mapToLocation(savedLocation);
+        return locationMapper.map(savedLocation);
+    }
+
+    @Override
+    public Location getOneByZipCodeOrCreated(@NotNull final Location location) {
+
+        return Optional.of(location)
+                .flatMap(loc -> {
+
+                    final String zipcode = Optional.ofNullable(loc.getZipCode())
+                            .map(code -> code.replaceAll("[^a-zA-Z0-9]", ""))
+                            .orElse(null);
+
+                    return locationRepository.findOneByZipCode(zipcode)
+                            .map(locationMapper::map);
+                })
+                .orElseGet(() -> {
+
+                    final LocationEntity entity = locationMapper.toEntity(location);
+
+                    return locationMapper.map(locationRepository.save(entity));
+                });
     }
 
 }

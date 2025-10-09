@@ -64,12 +64,6 @@ public class MenuDTO {
         this.image = image;
     }
 
-    public MenuDTO(Long id, String name, String description, BigDecimal price, RestaurantDTO restaurant, String image) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.restaurant = restaurant;
-        this.image = image;
+    public MenuDTO() {
     }
 }

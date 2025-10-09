@@ -2,6 +2,7 @@ package com.app.infra.application.mapper.location;
 
 import com.app.core.domain.location.Location;
 import com.app.core.exception.DomainException;
+import com.app.infra.application.dto.location.LocationDTO;
 import com.app.infra.application.request.location.LocationRequest;
 import com.app.infra.entity.location.LocationEntity;
 import jakarta.validation.constraints.NotNull;
@@ -60,6 +61,22 @@ public class LocationMapper {
         entity.setState(location.getState());
 
         return entity;
+    }
+
+    public LocationDTO toDTO(@NotNull final Location location) {
+
+        final LocationDTO dto = new LocationDTO();
+
+        dto.setId(location.getId());
+        dto.setAddress(location.getAddress());
+        dto.setNumber(location.getNumber());
+        dto.setNeighborhood(location.getNeighborhood());
+        dto.setComplement(location.getComplement());
+        dto.setZipCode(location.getZipCode());
+        dto.setCity(location.getCity());
+        dto.setState(location.getState());
+
+        return dto;
     }
 
 }

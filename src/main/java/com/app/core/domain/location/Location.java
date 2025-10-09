@@ -85,24 +85,4 @@ public class Location {
     public Location() {
     }
 
-    public Location(String address, String number, String neighborhood, String complement, String zipCode, String city, String state) {
-        this.address = address;
-        this.number = number;
-        this.neighborhood = neighborhood;
-        this.complement = complement;
-        this.zipCode = zipCode;
-        this.city = city;
-        this.state = state;
-    }
-
-    public Location(Long id, String address, String number, String neighborhood, String complement, String zipCode, String city, String state) {
-        this.id = id;
-        this.address = address;
-        this.number = number;
-        this.neighborhood = neighborhood;
-        this.complement = complement;
-        this.zipCode = zipCode;
-        this.city = city;
-        this.state = state;
-    }
 }

@@ -1,6 +1,5 @@
 package com.app.infra.application.controller.restaurant;
 
-import com.app.core.domain.location.Location;
 import com.app.core.domain.restaurant.Restaurant;
 import com.app.core.usecases.restaurant.RestaurantUseCase;
 import com.app.infra.application.dto.restaurant.RestaurantDTO;
@@ -38,13 +37,11 @@ public class RestaurantController {
 
         log.info("POST -> /res/restaurants -> {}", request);
 
-        final Location location = locationMapper.mapToLocation(request.getLocation());
+        final Restaurant restaurant = restaurantMapper.map(request);
 
-        final Restaurant restaurant = restaurantMapper.mapToRestaurant(request, location);
+        final Restaurant restaurantCreated = restaurantUseCase.created(restaurant);
 
-        final Restaurant restaurantCreated = restaurantUseCase.save(restaurant);
-
-        final RestaurantDTO dto = restaurantMapper.mapToDTO(restaurantCreated);
+        final RestaurantDTO dto = restaurantMapper.toDTO(restaurantCreated);
 
         return ResponseEntity.ok(dto);
 
@@ -55,11 +52,11 @@ public class RestaurantController {
 
         log.info("PUT -> /res/restaurants -> {}, {}", id, request);
 
-        final Restaurant restaurant = restaurantMapper.mapToRestaurant(request, id);
+        final Restaurant restaurant = restaurantMapper.map(request, id);
 
-        final Restaurant restaurantCreated = restaurantUseCase.save(restaurant);
+        final Restaurant restaurantUpdate = restaurantUseCase.update(restaurant);
 
-        final RestaurantDTO dto = restaurantMapper.mapToDTO(restaurantCreated);
+        final RestaurantDTO dto = restaurantMapper.toDTO(restaurantUpdate);
 
         return ResponseEntity.ok(dto);
 
@@ -71,7 +68,7 @@ public class RestaurantController {
         log.info("GET -> /res/restaurants -> {}", id);
 
         final RestaurantDTO dto = restaurantUseCase.findById(id)
-                .map(restaurantMapper::mapToDTO)
+                .map(restaurantMapper::toDTO)
                 .orElseThrow(() -> new IllegalStateException("Restaurant not found"));
 
         return ResponseEntity.ok(dto);
@@ -87,7 +84,7 @@ public class RestaurantController {
 
         final List<RestaurantDTO> dtos = restaurants
                 .stream()
-                .map(restaurantMapper::mapToDTO)
+                .map(restaurantMapper::toDTO)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(dtos);

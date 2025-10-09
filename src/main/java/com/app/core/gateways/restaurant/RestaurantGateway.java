@@ -7,7 +7,9 @@ import java.util.Optional;
 
 public interface RestaurantGateway {
 
-    Restaurant save(Restaurant restaurant);
+    Restaurant created(Restaurant restaurant);
+
+    Restaurant update(Restaurant restaurant);
 
     Optional<Restaurant> findById(Long id);
 

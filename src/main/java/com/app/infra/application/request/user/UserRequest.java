@@ -54,4 +54,6 @@ public class UserRequest {
         this.role = role;
     }
 
+    public UserRequest() {
+    }
 }

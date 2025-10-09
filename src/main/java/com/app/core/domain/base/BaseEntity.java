@@ -4,9 +4,6 @@ public abstract class BaseEntity {
 
     private Boolean active;
 
-    public BaseEntity() {
-    }
-
     public Boolean getActive() {
         return active;
     }
@@ -15,4 +12,6 @@ public abstract class BaseEntity {
         this.active = active;
     }
 
+    public BaseEntity() {
+    }
 }

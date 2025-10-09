@@ -6,4 +6,6 @@ public interface LocationGateway {
 
     Location save(Location location);
 
+    Location getOneByZipCodeOrCreated(Location location);
+
 }

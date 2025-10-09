@@ -4,16 +4,10 @@ import com.app.core.domain.location.Location;
 import com.app.core.domain.restaurant.Restaurant;
 import com.app.core.gateways.restaurant.RestaurantGateway;
 import com.app.core.usecases.location.LocationUseCase;
-import com.app.infra.application.mapper.location.LocationMapper;
 import com.app.infra.application.mapper.restaurant.RestaurantMapper;
-import com.app.infra.application.mapper.user.UserMapper;
-import com.app.infra.entity.location.LocationEntity;
 import com.app.infra.entity.restaurant.RestaurantEntity;
-import com.app.infra.entity.user.UserEntity;
-import com.app.infra.repository.location.LocationRepository;
 import com.app.infra.repository.restaurant.RestaurantRepository;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -25,50 +19,39 @@ public class RestaurantRepositoryGateway implements RestaurantGateway {
 
     private final RestaurantMapper restaurantMapper;
 
-    private final LocationMapper locationMapper;
-
-    private final UserMapper userMapper;
-
     private final RestaurantRepository restaurantRepository;
 
     private final LocationUseCase locationUseCase;
 
-    private final LocationRepository locationRepository;
-
-    public RestaurantRepositoryGateway(final RestaurantMapper restaurantMapper, final LocationMapper locationMapper, final UserMapper userMapper, final RestaurantRepository restaurantRepository, final LocationUseCase locationUseCase, final LocationRepository locationRepository) {
+    public RestaurantRepositoryGateway(final RestaurantMapper restaurantMapper, final RestaurantRepository restaurantRepository, final LocationUseCase locationUseCase) {
         this.restaurantMapper = restaurantMapper;
-        this.locationMapper = locationMapper;
-        this.userMapper = userMapper;
         this.restaurantRepository = restaurantRepository;
         this.locationUseCase = locationUseCase;
-        this.locationRepository = locationRepository;
     }
 
     @Override
-    public Restaurant save(@NotNull final Restaurant restaurant) {
+    public Restaurant created(@NotNull final Restaurant restaurant) {
 
 
-        final Location location = Optional.ofNullable(restaurant.getLocation())
-                .flatMap(loc -> {
+        final RestaurantEntity restaurantEntity = restaurantMapper.toEntity(restaurant);
 
-                    final String zipcode = Optional.ofNullable(loc.getZipCode())
-                            .map(code -> code.replaceAll("[^a-zA-Z0-9]", ""))
-                            .orElse(null);
+        final RestaurantEntity createdEntity = restaurantRepository.save(restaurantEntity);
 
-                    return locationRepository.findOneByZipCode(zipcode)
-                            .map(locationMapper::mapToLocation);
-                })
-                .orElseGet(() -> locationUseCase.save(restaurant.getLocation()));
+        return restaurantMapper.map(createdEntity);
+    }
 
-        final LocationEntity locationEntity = locationMapper.toEntity(location);
+    @Override
+    public Restaurant update(@NotNull final Restaurant restaurant) {
 
-        final UserEntity userEntity = userMapper.toNewEntityWithoutRole(restaurant.getRestaurantOwner());
+        final Location replaceLocation = locationUseCase.getOneByZipCodeOrCreated(restaurant.getLocation());
 
-        final RestaurantEntity restaurantEntity = restaurantMapper.toEntity(restaurant, locationEntity, userEntity);
+        restaurant.setLocation(replaceLocation);
+
+        final RestaurantEntity restaurantEntity = restaurantMapper.toEntity(restaurant);
 
         final RestaurantEntity savedEntity = restaurantRepository.save(restaurantEntity);
 
-        return restaurantMapper.mapToRestaurant(savedEntity);
+        return restaurantMapper.map(savedEntity);
     }
 
     @Override
@@ -77,7 +60,7 @@ public class RestaurantRepositoryGateway implements RestaurantGateway {
         final RestaurantEntity savedEntity = restaurantRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Restaurant not found"));
 
-        final Restaurant restaurant = restaurantMapper.mapToRestaurant(savedEntity);
+        final Restaurant restaurant = restaurantMapper.map(savedEntity);
 
         return Optional.of(restaurant);
     }
@@ -87,11 +70,9 @@ public class RestaurantRepositoryGateway implements RestaurantGateway {
 
         final Pageable pageable = PageRequest.of(page, size);
 
-        final Page<RestaurantEntity> entities = restaurantRepository.findAllByActive(pageable);
-
-        return entities
+        return restaurantRepository.findAllByActive(pageable)
                 .stream()
-                .map(restaurantMapper::mapToRestaurant)
+                .map(restaurantMapper::map)
                 .collect(Collectors.toList());
     }
 }

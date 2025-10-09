@@ -57,32 +57,4 @@ public class User extends BaseEntity {
 
     public User() {
     }
-
-    public User(String username, String login, String password) {
-        this.username = username;
-        this.login = login;
-        this.password = password;
-    }
-
-    public User(String username, String login, String password, Role role) {
-        this.username = username;
-        this.login = login;
-        this.password = password;
-        this.role = role;
-    }
-
-    public User(Long id, String username, String login, String password) {
-        this.id = id;
-        this.username = username;
-        this.login = login;
-        this.password = password;
-    }
-
-    public User(Long id, String username, String login, String password, Role role) {
-        this.id = id;
-        this.username = username;
-        this.login = login;
-        this.password = password;
-        this.role = role;
-    }
 }

@@ -1,14 +1,13 @@
 package com.app.infra.application.mapper.restaurant;
 
 import com.app.core.domain.restaurant.Menu;
-import com.app.core.domain.restaurant.Restaurant;
 import com.app.infra.application.dto.restaurant.MenuDTO;
-import com.app.infra.application.dto.restaurant.RestaurantDTO;
 import com.app.infra.application.request.restaurant.MenuRequest;
 import com.app.infra.entity.restaurant.MenuEntity;
-import com.app.infra.entity.restaurant.RestaurantEntity;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 @Component
 public class MenuMapper {
@@ -19,63 +18,100 @@ public class MenuMapper {
         this.restaurantMapper = restaurantMapper;
     }
 
-    public Menu mapToManu(@NotNull final MenuRequest request, @NotNull final Restaurant restaurant) {
+    public Menu map(@NotNull final MenuRequest request) {
 
-        return new Menu(
-                request.getName(),
-                request.getDescription(),
-                request.getPrice(),
-                restaurant,
-                request.getImage()
-        );
+        final Menu menu = new Menu();
+
+        menu.setId(request.getId());
+        menu.setName(request.getName());
+        menu.setDescription(request.getDescription());
+        menu.setPrice(request.getPrice());
+        menu.setImage(request.getImage());
+
+        if (Objects.nonNull(request.getRestaurant())) {
+
+            menu.setRestaurant(restaurantMapper.map(request.getRestaurant()));
+
+        }
+
+        return menu;
     }
 
-    public Menu mapToManu(@NotNull final MenuRequest request, @NotNull final Restaurant restaurant, @NotNull final Long id) {
+    public Menu map(@NotNull final MenuRequest request, @NotNull final Long id) {
 
-        return new Menu(
-                id,
-                request.getName(),
-                request.getDescription(),
-                request.getPrice(),
-                restaurant,
-                request.getImage()
-        );
+        final Menu menu = new Menu();
+
+        menu.setId(id);
+        menu.setName(request.getName());
+        menu.setDescription(request.getDescription());
+        menu.setPrice(request.getPrice());
+        menu.setImage(request.getImage());
+
+        if (Objects.nonNull(request.getRestaurant())) {
+
+            menu.setRestaurant(restaurantMapper.map(request.getRestaurant()));
+
+        }
+
+        return menu;
     }
 
-    public Menu mapToManu(@NotNull final MenuEntity entity, @NotNull final Restaurant restaurant) {
+    public Menu map(@NotNull final MenuEntity entity) {
 
-        return new Menu(
-                entity.getName(),
-                entity.getDescription(),
-                entity.getPrice(),
-                restaurant,
-                entity.getImage()
-        );
+        final Menu menu = new Menu();
+
+        menu.setId(entity.getId());
+        menu.setName(entity.getName());
+        menu.setDescription(entity.getDescription());
+        menu.setPrice(entity.getPrice());
+        menu.setImage(entity.getImage());
+
+        if (Objects.nonNull(entity.getRestaurant())) {
+
+            menu.setRestaurant(restaurantMapper.map(entity.getRestaurant()));
+
+        }
+
+        return menu;
     }
 
-    public MenuEntity toEntity(@NotNull final Menu menu, @NotNull final RestaurantEntity restaurant) {
-        return new MenuEntity(
-                menu.getId(),
-                menu.getName(),
-                menu.getDescription(),
-                menu.getPrice(),
-                restaurant,
-                menu.getImage()
-        );
+    public MenuEntity toEntity(@NotNull final Menu menu) {
+
+        final MenuEntity entity = new MenuEntity();
+
+        entity.setId(menu.getId());
+        entity.setName(menu.getName());
+        entity.setDescription(menu.getDescription());
+        entity.setPrice(menu.getPrice());
+        entity.setImage(menu.getImage());
+
+        if (Objects.nonNull(menu.getRestaurant())) {
+
+            entity.setRestaurant(restaurantMapper.toEntity(menu.getRestaurant()));
+
+        }
+
+        return entity;
     }
 
     public MenuDTO toDTO(@NotNull final Menu menu) {
 
-        final RestaurantDTO restaurant = restaurantMapper.mapToDTO(menu.getRestaurant());
+        final MenuDTO dto = new MenuDTO();
 
-        return new MenuDTO(
-                menu.getId(),
-                menu.getName(),
-                menu.getDescription(),
-                menu.getPrice(),
-                restaurant,
-                menu.getImage()
-        );
+        dto.setId(menu.getId());
+        dto.setName(menu.getName());
+        dto.setDescription(menu.getDescription());
+        dto.setPrice(menu.getPrice());
+        dto.setImage(menu.getImage());
+
+        if (Objects.nonNull(menu.getRestaurant())) {
+
+            dto.setRestaurant(restaurantMapper.toDTO(menu.getRestaurant()));
+
+        }
+
+        return dto;
     }
+
 
 }

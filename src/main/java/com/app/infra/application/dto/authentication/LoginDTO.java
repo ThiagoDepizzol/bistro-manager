@@ -24,9 +24,4 @@ public class LoginDTO {
 
     public LoginDTO() {
     }
-
-    public LoginDTO(final String login, final String password) {
-        this.login = login;
-        this.password = password;
-    }
 }

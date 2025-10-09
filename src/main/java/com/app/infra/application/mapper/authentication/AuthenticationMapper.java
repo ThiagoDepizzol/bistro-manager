@@ -8,8 +8,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthenticationMapper {
 
-    public LoginDTO mapToLoginDTO(@NotNull final LoginRequest json) {
-        return new LoginDTO(json.getLogin(), json.getPassword());
-    }
+    public LoginDTO map(@NotNull final LoginRequest request) {
 
+        final LoginDTO dto = new LoginDTO();
+
+        dto.setLogin(request.getLogin());
+        dto.setPassword(request.getPassword());
+
+        return dto;
+
+    }
 }
