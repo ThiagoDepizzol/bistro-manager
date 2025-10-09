@@ -15,7 +15,12 @@ public class RoleUseCase {
         this.roleGateway = roleGateway;
     }
 
-    public Role save(final Role role) {
+    public Role created(final Role role) {
+
+        return roleGateway.save(role);
+    }
+
+    public Role update(final Role role) {
 
         return roleGateway.save(role);
     }

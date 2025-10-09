@@ -29,30 +29,30 @@ public class RoleController {
     }
 
     @PostMapping
-    public ResponseEntity<RoleDTO> created(@RequestBody final RoleRequest json) {
+    public ResponseEntity<RoleDTO> created(@RequestBody final RoleRequest request) {
 
-        log.info("POST -> /adm/roles -> {}", json);
+        log.info("POST -> /adm/roles -> {}", request);
 
-        final Role role = roleMapper.mapToRole(json);
+        final Role role = roleMapper.map(request);
 
-        final Role roleCreated = roleUseCase.save(role);
+        final Role roleCreated = roleUseCase.created(role);
 
-        final RoleDTO dto = roleMapper.mapToDTO(roleCreated);
+        final RoleDTO dto = roleMapper.toDTO(roleCreated);
 
         return ResponseEntity.ok(dto);
 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RoleDTO> update(@PathVariable final Long id, @RequestBody final RoleRequest json) {
+    public ResponseEntity<RoleDTO> update(@PathVariable final Long id, @RequestBody final RoleRequest request) {
 
-        log.info("PUT -> /adm/roles -> {}, {}", id, json);
+        log.info("PUT -> /adm/roles -> {}, {}", id, request);
 
-        final Role role = roleMapper.mapToRole(json, id);
+        final Role role = roleMapper.map(request, id);
 
-        final Role useCreated = roleUseCase.save(role);
+        final Role roleUpdate = roleUseCase.update(role);
 
-        final RoleDTO dto = roleMapper.mapToDTO(useCreated);
+        final RoleDTO dto = roleMapper.toDTO(roleUpdate);
 
         return ResponseEntity.ok(dto);
 
@@ -64,7 +64,7 @@ public class RoleController {
         log.info("GET -> /adm/roles -> {}", id);
 
         final RoleDTO dto = roleUseCase.findById(id)
-                .map(roleMapper::mapToDTO)
+                .map(roleMapper::toDTO)
                 .orElseThrow(() -> new IllegalStateException("Role not found"));
 
         return ResponseEntity.ok(dto);
@@ -80,7 +80,7 @@ public class RoleController {
 
         final List<RoleDTO> dtos = roles
                 .stream()
-                .map(roleMapper::mapToDTO)
+                .map(roleMapper::toDTO)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(dtos);

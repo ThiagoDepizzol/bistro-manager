@@ -7,7 +7,9 @@ import java.util.Optional;
 
 public interface RoleGateway {
 
-    Role save(Role role);
+    Role created(Role role);
+
+    Role update(Role role);
 
     Optional<Role> findById(Long id);
 

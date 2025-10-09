@@ -30,7 +30,7 @@ public class UserMapper {
 
         if (Objects.nonNull(request.getRole())) {
 
-            user.setRole(roleMapper.mapToRole(request.getRole()));
+            user.setRole(roleMapper.map(request.getRole()));
 
         }
 
@@ -48,7 +48,7 @@ public class UserMapper {
 
         if (Objects.nonNull(request.getRole())) {
 
-            user.setRole(roleMapper.mapToRole(request.getRole()));
+            user.setRole(roleMapper.map(request.getRole()));
 
         }
 
@@ -66,7 +66,7 @@ public class UserMapper {
 
         if (Objects.nonNull(entity.getRole())) {
 
-            user.setRole(roleMapper.mapToRole(entity.getRole()));
+            user.setRole(roleMapper.map(entity.getRole()));
 
         }
 
@@ -100,7 +100,7 @@ public class UserMapper {
 
         if (Objects.nonNull(user.getRole())) {
 
-            dto.setRole(roleMapper.mapToDTO(user.getRole()));
+            dto.setRole(roleMapper.toDTO(user.getRole()));
 
         }
 

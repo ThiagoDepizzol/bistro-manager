@@ -6,7 +6,6 @@ import com.app.infra.application.mapper.roles.RoleMapper;
 import com.app.infra.entity.roles.RoleEntity;
 import com.app.infra.repository.roles.RoleRepository;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -26,13 +25,24 @@ public class RoleRepositoryGateway implements RoleGateway {
     }
 
     @Override
-    public Role save(@NotNull final Role role) {
+    public Role created(@NotNull final Role role) {
 
         final RoleEntity roleEntity = roleMapper.toEntity(role);
 
-        final RoleEntity savedEntity = roleRepository.save(roleEntity);
+        final RoleEntity createdEntity = roleRepository.save(roleEntity);
 
-        return roleMapper.mapToRole(savedEntity);
+        return roleMapper.map(createdEntity);
+    }
+
+
+    @Override
+    public Role update(@NotNull final Role role) {
+
+        final RoleEntity roleEntity = roleMapper.toEntity(role);
+
+        final RoleEntity updateEntity = roleRepository.save(roleEntity);
+
+        return roleMapper.map(updateEntity);
     }
 
     @Override
@@ -41,9 +51,9 @@ public class RoleRepositoryGateway implements RoleGateway {
         final RoleEntity savedEntity = roleRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Role not found"));
 
-        final Role role = roleMapper.mapToRole(savedEntity);
+        final Role role = roleMapper.map(savedEntity);
 
-        return Optional.of(role);
+        return Optional.ofNullable(role);
     }
 
     @Override
@@ -51,11 +61,9 @@ public class RoleRepositoryGateway implements RoleGateway {
 
         final Pageable pageable = PageRequest.of(page, size);
 
-        final Page<RoleEntity> entities = roleRepository.findAllByActive(pageable);
-
-        return entities
+        return roleRepository.findAllByActive(pageable)
                 .stream()
-                .map(roleMapper::mapToRole)
+                .map(roleMapper::map)
                 .collect(Collectors.toList());
     }
 
@@ -63,6 +71,6 @@ public class RoleRepositoryGateway implements RoleGateway {
     public Optional<Role> findOneSystemAdmin() {
 
         return roleRepository.findOneByActive()
-                .map(roleMapper::mapToRole);
+                .map(roleMapper::map);
     }
 }
