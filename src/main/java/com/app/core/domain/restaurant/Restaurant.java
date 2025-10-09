@@ -65,4 +65,12 @@ public class Restaurant extends BaseEntity {
         this.kitchenType = kitchenType;
         this.restaurantOwner = restaurantOwner;
     }
+
+    public Restaurant(Long id, String name, Location location, String kitchenType, User restaurantOwner) {
+        this.id = id;
+        this.name = name;
+        this.location = location;
+        this.kitchenType = kitchenType;
+        this.restaurantOwner = restaurantOwner;
+    }
 }

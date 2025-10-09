@@ -1,9 +1,18 @@
 package com.app.infra.application.dto.restaurant;
 
+import com.app.core.domain.location.Location;
+import com.app.core.domain.user.User;
+
 public class RestaurantDTO {
     private Long id;
 
-    private String username;
+    private String name;
+
+    private Location location;
+
+    private String kitchenType;
+
+    private User restaurantOwner;
 
     public Long getId() {
         return id;
@@ -13,14 +22,46 @@ public class RestaurantDTO {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public String getKitchenType() {
+        return kitchenType;
+    }
+
+    public void setKitchenType(String kitchenType) {
+        this.kitchenType = kitchenType;
+    }
+
+    public User getRestaurantOwner() {
+        return restaurantOwner;
+    }
+
+    public void setRestaurantOwner(User restaurantOwner) {
+        this.restaurantOwner = restaurantOwner;
     }
 
     public RestaurantDTO() {
+    }
+
+    public RestaurantDTO(Long id, String name, Location location, String kitchenType, User restaurantOwner) {
+        this.id = id;
+        this.name = name;
+        this.location = location;
+        this.kitchenType = kitchenType;
+        this.restaurantOwner = restaurantOwner;
     }
 }

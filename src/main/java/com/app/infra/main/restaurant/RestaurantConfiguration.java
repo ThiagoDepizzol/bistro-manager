@@ -7,6 +7,7 @@ import com.app.infra.application.mapper.location.LocationMapper;
 import com.app.infra.application.mapper.restaurant.RestaurantMapper;
 import com.app.infra.application.mapper.user.UserMapper;
 import com.app.infra.gateway.restaurant.RestaurantRepositoryGateway;
+import com.app.infra.repository.location.LocationRepository;
 import com.app.infra.repository.restaurant.RestaurantRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -20,8 +21,8 @@ public class RestaurantConfiguration {
     }
 
     @Bean
-    RestaurantGateway createdRestaurantGateway(final RestaurantMapper restaurantMapper, final LocationMapper locationMapper, final UserMapper userMapper, final RestaurantRepository restaurantRepository, final LocationUseCase locationUseCase) {
-        return new RestaurantRepositoryGateway(restaurantMapper, locationMapper, userMapper, restaurantRepository, locationUseCase);
+    RestaurantGateway createdRestaurantGateway(final RestaurantMapper restaurantMapper, final LocationMapper locationMapper, final UserMapper userMapper, final RestaurantRepository restaurantRepository, final LocationUseCase locationUseCase, final LocationRepository locationRepository) {
+        return new RestaurantRepositoryGateway(restaurantMapper, locationMapper, userMapper, restaurantRepository, locationUseCase, locationRepository);
     }
 
 }

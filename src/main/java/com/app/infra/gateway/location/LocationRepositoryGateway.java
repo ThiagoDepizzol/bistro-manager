@@ -29,20 +29,9 @@ public class LocationRepositoryGateway implements LocationGateway {
 
         final LocationEntity entity = locationMapper.toEntity(location, zipLocation);
 
-        return locationMapper.mapToLocation(entity);
-    }
+        final LocationEntity savedLocation = locationRepository.save(entity);
 
-    @Override
-    public Optional<Location> findOneByZipCode(@NotNull final String zipCode) {
-
-        final String zipLocation = Optional.ofNullable(zipCode)
-                .map(code -> code.replaceAll("[^a-zA-Z0-9]", ""))
-                .orElse(null);
-
-        final LocationEntity entity = locationRepository.findOneByZipCode(zipLocation)
-                .orElseThrow(() -> new IllegalStateException("Location not found by zip code"));
-
-        return Optional.ofNullable(locationMapper.mapToLocation(entity));
+        return locationMapper.mapToLocation(savedLocation);
     }
 
 }

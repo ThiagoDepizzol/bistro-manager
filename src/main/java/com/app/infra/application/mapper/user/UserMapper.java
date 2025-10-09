@@ -11,8 +11,6 @@ import com.app.infra.entity.user.UserEntity;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
-
 @Component
 public class UserMapper {
 
@@ -66,42 +64,50 @@ public class UserMapper {
 
     }
 
-    public User mapToUser(@NotNull final UserRequest request, @NotNull final Long id) {
-
-        final Role role = roleMapper.mapToRole(request.getRole());
+    public User toUserEntityWithoutRole(@NotNull final UserRequest request, @NotNull final Long id) {
 
         return new User(
                 id,
                 request.getUsername(),
                 request.getLogin(),
-                PasswordUtils.encryptPassword(request.getPassword()),
-                role
+                PasswordUtils.encryptPassword(request.getPassword())
         );
     }
 
-    public User mapToUser(@NotNull final UserEntity entity) {
+    public User toUserEntityWithRole(@NotNull final UserEntity entity, @NotNull final Long id) {
 
-        if (Objects.nonNull(entity.getRole())) {
+        final Role role = roleMapper.mapToRole(entity.getRole());
 
-            final Role role = roleMapper.mapToRole(entity.getRole());
+        return new User(
+                entity.getId(),
+                entity.getUsername(),
+                entity.getLogin(),
+                entity.getPassword(),
+                role
+        );
 
-            return new User(
-                    entity.getId(),
-                    entity.getUsername(),
-                    entity.getLogin(),
-                    entity.getPassword(),
-                    role
-            );
+    }
 
-        } else {
+    public User toUserEntityWithoutRole(@NotNull final UserEntity entity) {
+        return new User(
+                entity.getId(),
+                entity.getUsername(),
+                entity.getLogin(),
+                entity.getPassword()
+        );
+    }
 
-            return new User(
-                    entity.getId(),
-                    entity.getUsername(),
-                    entity.getLogin(),
-                    entity.getPassword()
-            );
-        }
+    public User toUserEntityWithRole(@NotNull final UserEntity entity) {
+
+        final Role role = roleMapper.mapToRole(entity.getRole());
+
+        return new User(
+                entity.getId(),
+                entity.getUsername(),
+                entity.getLogin(),
+                entity.getPassword(),
+                role
+        );
 
     }
 

@@ -3,6 +3,8 @@ package com.app.infra.application.mapper.restaurant;
 import com.app.core.domain.location.Location;
 import com.app.core.domain.restaurant.Restaurant;
 import com.app.infra.application.dto.restaurant.RestaurantDTO;
+import com.app.infra.application.mapper.location.LocationMapper;
+import com.app.infra.application.mapper.user.UserMapper;
 import com.app.infra.application.request.restaurant.RestaurantRequest;
 import com.app.infra.entity.location.LocationEntity;
 import com.app.infra.entity.restaurant.RestaurantEntity;
@@ -12,6 +14,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RestaurantMapper {
+
+    private final LocationMapper locationMapper;
+
+    private final UserMapper userMapper;
+
+    public RestaurantMapper(final LocationMapper locationMapper, final UserMapper userMapper) {
+        this.locationMapper = locationMapper;
+        this.userMapper = userMapper;
+    }
 
     public Restaurant mapToRestaurant(@NotNull final RestaurantRequest request, @NotNull final Location location) {
 
@@ -32,7 +43,13 @@ public class RestaurantMapper {
     }
 
     public Restaurant mapToRestaurant(@NotNull final RestaurantEntity entity) {
-        return new Restaurant();
+        return new Restaurant(
+                entity.getId(),
+                entity.getName(),
+                locationMapper.mapToLocation(entity.getLocation()),
+                entity.getKitchenType(),
+                userMapper.toUserEntityWithoutRole(entity.getRestaurantOwner())
+        );
     }
 
     public RestaurantEntity toEntity(@NotNull final Restaurant restaurant) {
@@ -50,7 +67,13 @@ public class RestaurantMapper {
     }
 
     public RestaurantDTO mapToDTO(@NotNull final Restaurant restaurant) {
-        return new RestaurantDTO();
+        return new RestaurantDTO(
+                restaurant.getId(),
+                restaurant.getName(),
+                restaurant.getLocation(),
+                restaurant.getKitchenType(),
+                restaurant.getRestaurantOwner()
+        );
     }
 
 

@@ -48,7 +48,7 @@ public class UserRepositoryGateway implements UserGateway {
 
         final UserEntity savedEntity = userRepository.save(userEntity);
 
-        return userMapper.mapToUser(savedEntity);
+        return userMapper.toUserEntityWithRole(savedEntity);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class UserRepositoryGateway implements UserGateway {
 
         final UserEntity savedEntity = userRepository.save(userEntity);
 
-        return userMapper.mapToUser(savedEntity);
+        return userMapper.toUserEntityWithoutRole(savedEntity);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class UserRepositoryGateway implements UserGateway {
 
         final UserEntity savedEntity = userRepository.save(userEntity);
 
-        return userMapper.mapToUser(savedEntity);
+        return userMapper.toUserEntityWithRole(savedEntity);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class UserRepositoryGateway implements UserGateway {
         final UserEntity savedEntity = userRepository.findById(id)
                 .orElseThrow(() -> new DomainException("Usuário não encontrado"));
 
-        final User user = userMapper.mapToUser(savedEntity);
+        final User user = userMapper.toUserEntityWithoutRole(savedEntity);
 
         return Optional.of(user);
     }
@@ -97,7 +97,7 @@ public class UserRepositoryGateway implements UserGateway {
 
         return entities
                 .stream()
-                .map(userMapper::mapToUser)
+                .map(userMapper::toUserEntityWithoutRole)
                 .collect(Collectors.toList());
     }
 }
