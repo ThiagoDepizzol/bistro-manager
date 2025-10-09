@@ -39,7 +39,7 @@ public class RestaurantMapper {
 
         if (Objects.nonNull(request.getRestaurantOwner())) {
 
-            restaurant.setRestaurantOwner(userMapper.map(request.getRestaurantOwner()));
+            restaurant.setRestaurantOwner(userMapper.mapWithoutEncryptPassword(request.getRestaurantOwner()));
 
         }
 
@@ -62,7 +62,7 @@ public class RestaurantMapper {
 
         if (Objects.nonNull(request.getRestaurantOwner())) {
 
-            restaurant.setRestaurantOwner(userMapper.map(request.getRestaurantOwner()));
+            restaurant.setRestaurantOwner(userMapper.mapWithoutEncryptPassword(request.getRestaurantOwner()));
 
         }
 

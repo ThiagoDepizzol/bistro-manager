@@ -32,6 +32,9 @@ public class RestaurantRepositoryGateway implements RestaurantGateway {
     @Override
     public Restaurant created(@NotNull final Restaurant restaurant) {
 
+        final Location replaceLocation = locationUseCase.getOneByZipCodeOrCreated(restaurant.getLocation());
+
+        restaurant.setLocation(replaceLocation);
 
         final RestaurantEntity restaurantEntity = restaurantMapper.toEntity(restaurant);
 

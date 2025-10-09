@@ -2,15 +2,15 @@ package com.app.infra.application.controller.authentication;
 
 import com.app.core.usecases.authentication.AuthenticationUseCase;
 import com.app.infra.application.dto.authentication.LoginDTO;
+import com.app.infra.application.dto.common.MessageResponse;
 import com.app.infra.application.mapper.authentication.AuthenticationMapper;
-import com.app.infra.application.request.authentication.LoginRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,15 +32,15 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody final LoginRequest request) {
+    public ResponseEntity<?> login(@RequestHeader(HttpHeaders.AUTHORIZATION) String header) {
 
-        log.info("POST -> /login -> {} ", request);
+        log.info("POST -> /login -> {} ", header);
 
-        final LoginDTO dto = authenticationMapper.map(request);
+        final LoginDTO dto = authenticationMapper.map(header);
 
         authenticationUseCase.authentication(dto);
 
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(new MessageResponse("Usuário logado com sucesso"));
 
     }
 
@@ -67,7 +67,7 @@ public class AuthenticationController {
             }
         }
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.ok(new MessageResponse("Usuário deslogado com sucesso"));
 
     }
 

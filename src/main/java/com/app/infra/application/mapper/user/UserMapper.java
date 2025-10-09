@@ -1,6 +1,7 @@
 package com.app.infra.application.mapper.user;
 
 import com.app.core.domain.user.User;
+import com.app.core.utils.PasswordUtils;
 import com.app.infra.application.dto.user.UserDTO;
 import com.app.infra.application.mapper.roles.RoleMapper;
 import com.app.infra.application.request.user.UserRequest;
@@ -19,6 +20,23 @@ public class UserMapper {
         this.roleMapper = roleMapper;
     }
 
+    public User mapWithoutEncryptPassword(@NotNull final UserRequest request) {
+
+        final User user = new User();
+
+        user.setId(request.getId());
+        user.setUsername(request.getUsername());
+        user.setLogin(request.getLogin());
+
+        if (Objects.nonNull(request.getRole())) {
+
+            user.setRole(roleMapper.map(request.getRole()));
+
+        }
+
+        return user;
+    }
+
     public User map(@NotNull final UserRequest request) {
 
         final User user = new User();
@@ -26,7 +44,7 @@ public class UserMapper {
         user.setId(request.getId());
         user.setUsername(request.getUsername());
         user.setLogin(request.getLogin());
-        user.setPassword(request.getPassword());
+        user.setPassword(PasswordUtils.encryptPassword(request.getPassword()));
 
         if (Objects.nonNull(request.getRole())) {
 
@@ -44,7 +62,7 @@ public class UserMapper {
         user.setId(id);
         user.setUsername(request.getUsername());
         user.setLogin(request.getLogin());
-        user.setPassword(request.getPassword());
+        user.setPassword(PasswordUtils.encryptPassword(request.getPassword()));
 
         if (Objects.nonNull(request.getRole())) {
 
