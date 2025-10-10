@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY . .
 
+RUN chmod +x ./mvnw
 RUN --mount=type=cache,target=/root/.m2 ./mvnw clean package -DskipTests && ls -l /app/target
 
 FROM eclipse-temurin:21-jre-jammy
