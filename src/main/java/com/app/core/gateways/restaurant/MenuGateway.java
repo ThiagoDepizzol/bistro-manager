@@ -14,4 +14,6 @@ public interface MenuGateway {
     Optional<Menu> findById(Long id);
 
     List<Menu> findAllActive(int page, int size, String header);
+
+    List<Menu> getAllByRestaurant(final Long id);
 }

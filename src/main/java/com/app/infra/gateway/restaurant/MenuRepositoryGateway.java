@@ -90,4 +90,13 @@ public class MenuRepositoryGateway implements MenuGateway {
                 .map(menuMapper::map)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Menu> getAllByRestaurant(final Long restaurantId) {
+
+        return menuRepository.getAllByRestaurant(restaurantId)
+                .stream()
+                .map(menuMapper::map)
+                .collect(Collectors.toList());
+    }
 }

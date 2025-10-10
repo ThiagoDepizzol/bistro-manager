@@ -100,4 +100,20 @@ public class MenuController {
 
     }
 
+    @GetMapping("by-restaurant/{restaurantId}")
+    public ResponseEntity<List<MenuDTO>> getAllByRestaurant(@PathVariable final Long restaurantId) {
+
+        log.info("GET -> /res/menus/by-restaurant -> {} ", restaurantId);
+
+        final List<Menu> menus = menuUseCase.getAllByRestaurant(restaurantId);
+
+        final List<MenuDTO> dtos = menus
+                .stream()
+                .map(menuMapper::toDTO)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtos);
+
+    }
+
 }

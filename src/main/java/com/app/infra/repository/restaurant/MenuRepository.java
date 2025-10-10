@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface MenuRepository extends CrudRepository<MenuEntity, Long> {
 
     @Query(nativeQuery = true, //
@@ -29,6 +31,17 @@ public interface MenuRepository extends CrudRepository<MenuEntity, Long> {
                     "                      where users.id = sub_users.id " +//
                     "                        and sub_users.id = :userId)))) ")
     Page<MenuEntity> findAllByActive(@Param("isSystemAdmin") Boolean isSystemAdmin, @Param("userId") Long userId, Pageable pageable);
+
+
+    @Query(nativeQuery = true, //
+            value = "select menus.* " +//
+                    "from res_menus menus " +//
+                    "         left join res_restaurants restaurants " +//
+                    "                   on restaurants.id = menus.res_restaurant_id " +//
+                    "                       and restaurants.active = true " +//
+                    "where menus.active = true " +//
+                    "  and restaurants.id = :restaurantId ")
+    List<MenuEntity> getAllByRestaurant(@Param("restaurantId") Long restaurantId);
 }
 
 

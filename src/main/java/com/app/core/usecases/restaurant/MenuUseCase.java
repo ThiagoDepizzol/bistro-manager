@@ -33,4 +33,9 @@ public class MenuUseCase {
 
         return menuGateway.findAllActive(page, size, header);
     }
+
+    public List<Menu> getAllByRestaurant(final Long restaurantId) {
+
+        return menuGateway.getAllByRestaurant(restaurantId);
+    }
 }
