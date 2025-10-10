@@ -8,4 +8,6 @@ public interface AuthenticationGateway {
 
     void disconnect(String login, String password);
 
+    void isUserAuthenticated(final LoginDTO dto);
+
 }

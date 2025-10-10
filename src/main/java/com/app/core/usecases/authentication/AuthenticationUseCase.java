@@ -23,4 +23,9 @@ public class AuthenticationUseCase {
 
     }
 
+    public void isUserAuthenticated(final LoginDTO dto) {
+
+        authenticationGateway.isUserAuthenticated(dto);
+    }
+
 }

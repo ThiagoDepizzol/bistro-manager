@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 
 public class AuthenticationRepositoryGateway implements AuthenticationGateway {
@@ -83,6 +84,40 @@ public class AuthenticationRepositoryGateway implements AuthenticationGateway {
 
         userRepository.save(userEntity);
 
+
+    }
+
+    @Override
+    public void isUserAuthenticated(@NotNull final LoginDTO dto) {
+
+        final String login = dto.getLogin();
+
+        final String password = dto.getPassword();
+
+        final UserEntity userEntity = userRepository.findByEmail(login)
+                .orElseThrow(() -> {
+
+                    log.info("Email não encontrado");
+
+                    return new DomainException("Usuário ou senha inválidos");
+                });
+
+        if (!PasswordUtils.matches(password, userEntity.getPassword())) {
+
+
+            log.info("Senha incorreta");
+
+            throw new DomainException("Usuário ou senha inválidos");
+
+        }
+
+        if (Objects.isNull(userEntity.getLoginHash())) {
+
+            log.info("Usuário sem login");
+
+            throw new DomainException("Para continuar faça login");
+
+        }
 
     }
 

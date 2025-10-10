@@ -2,11 +2,13 @@ package com.app.infra.application.controller.restaurant;
 
 import com.app.core.domain.restaurant.Menu;
 import com.app.core.usecases.restaurant.MenuUseCase;
+import com.app.core.usecases.validation.menu.MenuAuthorizationUseCase;
 import com.app.infra.application.dto.restaurant.MenuDTO;
 import com.app.infra.application.mapper.restaurant.MenuMapper;
 import com.app.infra.application.request.restaurant.MenuRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,17 +25,22 @@ public class MenuController {
 
     private final MenuUseCase menuUseCase;
 
-    public MenuController(final MenuMapper menuMapper, MenuUseCase menuUseCase) {
+    private final MenuAuthorizationUseCase menuAuthorizationUseCase;
+
+    public MenuController(final MenuMapper menuMapper, final MenuUseCase menuUseCase, final MenuAuthorizationUseCase menuAuthorizationUseCase) {
         this.menuMapper = menuMapper;
         this.menuUseCase = menuUseCase;
+        this.menuAuthorizationUseCase = menuAuthorizationUseCase;
     }
 
     @PostMapping
-    public ResponseEntity<MenuDTO> created(@RequestBody final MenuRequest request) {
+    public ResponseEntity<MenuDTO> created(@RequestBody final MenuRequest request, @RequestHeader(HttpHeaders.AUTHORIZATION) String header) {
 
-        log.info("POST -> /res/menus -> {}", request);
+        log.info("POST -> /res/menus -> {}, {}", request, header);
 
         final Menu menu = menuMapper.map(request);
+
+        menuAuthorizationUseCase.hasPermissionCreatedOrUpdate(header, menu);
 
         final Menu menuCreated = menuUseCase.created(menu);
 
@@ -44,11 +51,13 @@ public class MenuController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MenuDTO> update(@PathVariable final Long id, @RequestBody final MenuRequest request) {
+    public ResponseEntity<MenuDTO> update(@PathVariable final Long id, @RequestBody final MenuRequest request, @RequestHeader(HttpHeaders.AUTHORIZATION) String header) {
 
         log.info("PUT -> /res/menus -> {}, {}", id, request);
 
         final Menu menu = menuMapper.map(request, id);
+
+        menuAuthorizationUseCase.hasPermissionCreatedOrUpdate(header, menu);
 
         final Menu menuUpdate = menuUseCase.update(menu);
 
@@ -59,7 +68,7 @@ public class MenuController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MenuDTO> get(@PathVariable final Long id) {
+    public ResponseEntity<MenuDTO> get(@PathVariable final Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String header) {
 
         log.info("GET -> /res/menus -> {}", id);
 
@@ -72,7 +81,7 @@ public class MenuController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MenuDTO>> getAll(@RequestParam final int page, @RequestParam final int size) {
+    public ResponseEntity<List<MenuDTO>> getAll(@RequestParam final int page, @RequestParam final int size, @RequestHeader(HttpHeaders.AUTHORIZATION) String header) {
 
         log.info("GET -> /res/menus -> {}, {}", page, size);
 
