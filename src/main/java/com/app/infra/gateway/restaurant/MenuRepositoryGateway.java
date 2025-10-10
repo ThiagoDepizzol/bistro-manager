@@ -1,10 +1,16 @@
 package com.app.infra.gateway.restaurant;
 
+import com.app.core.domain.enums.RoleType;
 import com.app.core.domain.restaurant.Menu;
 import com.app.core.gateways.restaurant.MenuGateway;
+import com.app.infra.application.dto.authentication.LoginDTO;
+import com.app.infra.application.mapper.authentication.AuthenticationMapper;
 import com.app.infra.application.mapper.restaurant.MenuMapper;
 import com.app.infra.entity.restaurant.MenuEntity;
+import com.app.infra.entity.roles.RoleEntity;
+import com.app.infra.entity.user.UserEntity;
 import com.app.infra.repository.restaurant.MenuRepository;
+import com.app.infra.repository.user.UserRepository;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,9 +25,15 @@ public class MenuRepositoryGateway implements MenuGateway {
 
     private final MenuMapper menuMapper;
 
-    public MenuRepositoryGateway(final MenuRepository menuRepository, final MenuMapper menuMapper) {
+    private final AuthenticationMapper authenticationMapper;
+
+    private final UserRepository userRepository;
+
+    public MenuRepositoryGateway(final MenuRepository menuRepository, final MenuMapper menuMapper, final AuthenticationMapper authenticationMapper, final UserRepository userRepository) {
         this.menuRepository = menuRepository;
         this.menuMapper = menuMapper;
+        this.authenticationMapper = authenticationMapper;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -56,11 +68,24 @@ public class MenuRepositoryGateway implements MenuGateway {
     }
 
     @Override
-    public List<Menu> findAllActive(final int page, final int size) {
+    public List<Menu> findAllActive(final int page, final int size, final String header) {
+
+        final LoginDTO dto = authenticationMapper.map(header);
+
+        final UserEntity user = userRepository.findByEmail(dto.getLogin())
+                .orElseThrow(() -> new IllegalStateException("User not found"));
+
+        final Long userId = user.getId();
+
+        final RoleType type = Optional.ofNullable(user.getRole())
+                .map(RoleEntity::getType)
+                .orElseThrow(() -> new IllegalStateException("Role not found"));
+
+        final Boolean isSystemAdmin = RoleType.SYSTEM_ADMIN.equals(type);
 
         final Pageable pageable = PageRequest.of(page, size);
 
-        return menuRepository.findAllByActive(pageable)
+        return menuRepository.findAllByActive(isSystemAdmin, userId, pageable)
                 .stream()
                 .map(menuMapper::map)
                 .collect(Collectors.toList());

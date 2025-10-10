@@ -72,6 +72,8 @@ public class MenuController {
 
         log.info("GET -> /res/menus -> {}", id);
 
+        menuAuthorizationUseCase.hasPermissionView(header);
+
         final MenuDTO dto = menuUseCase.findById(id)
                 .map(menuMapper::toDTO)
                 .orElseThrow(() -> new IllegalStateException("Menu not found"));
@@ -85,7 +87,9 @@ public class MenuController {
 
         log.info("GET -> /res/menus -> {}, {}", page, size);
 
-        final List<Menu> menus = menuUseCase.findAllActive(page, size);
+        menuAuthorizationUseCase.hasPermissionView(header);
+
+        final List<Menu> menus = menuUseCase.findAllActive(page, size, header);
 
         final List<MenuDTO> dtos = menus
                 .stream()

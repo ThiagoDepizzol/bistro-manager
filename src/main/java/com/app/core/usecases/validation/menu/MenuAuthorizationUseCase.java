@@ -38,4 +38,12 @@ public class MenuAuthorizationUseCase {
 
     }
 
+    public void hasPermissionView(@NotNull final String header) {
+
+        final LoginDTO dto = authenticationMapper.map(header);
+
+        authenticationUseCase.isUserAuthenticated(dto);
+
+    }
+
 }

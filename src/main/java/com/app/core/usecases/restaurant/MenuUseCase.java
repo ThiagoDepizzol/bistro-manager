@@ -29,8 +29,8 @@ public class MenuUseCase {
         return menuGateway.findById(id);
     }
 
-    public List<Menu> findAllActive(final int page, final int size) {
+    public List<Menu> findAllActive(final int page, final int size, String header) {
 
-        return menuGateway.findAllActive(page, size);
+        return menuGateway.findAllActive(page, size, header);
     }
 }
