@@ -36,7 +36,7 @@ public class UserTest {
 
         final AtomicLong counter = new AtomicLong(1L);
 
-        Mockito.when(userGateway.save(Mockito.any(User.class)))
+        Mockito.when(userGateway.created(Mockito.any(User.class)))
                 .thenAnswer(invocation -> {
 
                     final User user = invocation.getArgument(0);
@@ -84,13 +84,20 @@ public class UserTest {
     @Test
     void testCreateUser() {
 
-        final Role role = new Role(null, "Dono de restaurante", RoleType.RESTAURANT_OWNER, null);
+        final Role role = new Role();
+        role.setActive(true);
+        role.setName("Dono de restaurante");
+        role.setType(RoleType.RESTAURANT_OWNER);
 
-        final Role saveRole = roleUseCase.save(role);
+        final Role saveRole = roleUseCase.created(role);
 
-        final User user = new User(null, "Thiago Depizzol", "thiago.depizzol@fiap.com.br", "12345678", saveRole);
+        final User user = new User();
+        user.setUsername("Thiago Depizzol");
+        user.setLogin("thiago.depizzol@fiap.com.br");
+        user.setPassword("12345678");
+        user.setRole(saveRole);
 
-        final User saveUser = userUseCase.save(user);
+        final User saveUser = userUseCase.created(user);
 
         assertEquals("Thiago Depizzol", saveUser.getUsername());
         assertEquals("thiago.depizzol@fiap.com.br", saveUser.getLogin());
@@ -105,17 +112,25 @@ public class UserTest {
     @Test
     void testUpdateUser() {
 
-        final Role role = new Role(null, "Dono de restaurante", RoleType.RESTAURANT_OWNER, null);
+        final Role role = new Role();
+        role.setActive(true);
+        role.setName("Dono de restaurante");
+        role.setType(RoleType.RESTAURANT_OWNER);
 
-        final Role saveRole = roleUseCase.save(role);
+        final Role saveRole = roleUseCase.created(role);
 
-        final User user = new User(null, "Thiago Depizzol", "thiago.depizzol@fiap.com.br", "12345678", saveRole);
+        final User user = new User();
+        user.setUsername("Thiago Depizzol");
+        user.setLogin("thiago.depizzol@fiap.com.br");
+        user.setPassword("12345678");
+        user.setRole(saveRole);
 
-        final User saveUser = userUseCase.save(user);
+        final User saveUser = userUseCase.created(user);
 
         saveUser.setUsername("Thiago Oliveira Depizzol");
 
-        final User updateUser = userUseCase.save(saveUser);
+        final User updateUser = userUseCase.update(
+                saveUser);
 
         assertEquals("Thiago Oliveira Depizzol", updateUser.getUsername());
         assertEquals("thiago.depizzol@fiap.com.br", updateUser.getLogin());
@@ -127,15 +142,20 @@ public class UserTest {
     @Test
     void testGet() {
 
-        final Role role = new Role(null, "Dono de restaurante", RoleType.RESTAURANT_OWNER, null);
+        final Role role = new Role();
+        role.setActive(true);
+        role.setName("Dono de restaurante");
+        role.setType(RoleType.RESTAURANT_OWNER);
 
-        final Role saveRole = roleUseCase.save(role);
+        final Role saveRole = roleUseCase.created(role);
 
-        final User newUser = new User(null, "Thiago Depizzol", "thiago.depizzol@fiap.com.br", "12345678", saveRole);
+        final User newUser = new User();
+        newUser.setUsername("Thiago Depizzol");
+        newUser.setLogin("thiago.depizzol@fiap.com.br");
+        newUser.setPassword("12345678");
+        newUser.setRole(saveRole);
 
-        final User saveUser = userUseCase.save(newUser);
-
-        final User savedUser = userUseCase.save(saveUser);
+        final User savedUser = userUseCase.created(newUser);
 
         final Long id = savedUser.getId();
 
@@ -151,13 +171,40 @@ public class UserTest {
     @DisplayName("Buscar usuário pela paginação")
     @Test
     void testGetAll() {
-        final Role restaurantOwner = roleUseCase.save(new Role(null, "Dono de restaurante", RoleType.RESTAURANT_OWNER, null));
-        final Role customer = roleUseCase.save(new Role(null, "Dono de restaurante", RoleType.CUSTOMER, null));
-        final Role systemAdmin = roleUseCase.save(new Role(null, "Dono de restaurante", RoleType.SYSTEM_ADMIN, null));
 
-        userUseCase.save(new User(null, "Thiago Depizzol", "thiago.depizzol@fiap.com.br", "12345678", restaurantOwner));
-        userUseCase.save(new User(null, "Maria Silva", "maria.silva@fiap.com.br", "87654321", customer));
-        userUseCase.save(new User(null, "João Souza", "joao.souza@fiap.com.br", "abcdef12", systemAdmin));
+        final Role restaurantOwner = new Role();
+        restaurantOwner.setName("Dono de restaurante");
+        restaurantOwner.setType(RoleType.RESTAURANT_OWNER);
+
+        final Role customer = new Role();
+        restaurantOwner.setName("Cliente");
+        restaurantOwner.setType(RoleType.CUSTOMER);
+
+        final Role systemAdmin = new Role();
+        restaurantOwner.setName("Administrador de sistema");
+        restaurantOwner.setType(RoleType.SYSTEM_ADMIN);
+
+        final Role savedRestaurantOwner = roleUseCase.created(restaurantOwner);
+        final Role savedCustomer = roleUseCase.created(customer);
+        final Role savedSystemAdmin = roleUseCase.created(systemAdmin);
+
+        final User restaurantOwnerUser = new User();
+        restaurantOwnerUser.setUsername("Thiago Depizzol");
+        restaurantOwnerUser.setLogin("thiago.depizzol@fiap.com.br");
+        restaurantOwnerUser.setPassword("12345678");
+        restaurantOwnerUser.setRole(savedRestaurantOwner);
+
+        final User customerUser = new User();
+        restaurantOwnerUser.setUsername("Maria Silva");
+        restaurantOwnerUser.setLogin("maria.silva@fiap.com.br");
+        restaurantOwnerUser.setPassword("87654321");
+        restaurantOwnerUser.setRole(savedCustomer);
+
+        final User systemAdminUser = new User();
+        restaurantOwnerUser.setUsername("João Souza");
+        restaurantOwnerUser.setLogin("joao.souza@fiap.com.br");
+        restaurantOwnerUser.setPassword("abcdef12");
+        restaurantOwnerUser.setRole(savedSystemAdmin);
 
         final int page = 0;
         final int size = 10;

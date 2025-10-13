@@ -1,8 +1,9 @@
 package com.app.core.domain.role;
 
+import com.app.core.domain.base.BaseEntity;
 import com.app.core.domain.enums.RoleType;
 
-public class Role {
+public class Role extends BaseEntity {
 
     private Long id;
 
