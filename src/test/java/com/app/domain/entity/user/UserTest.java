@@ -195,16 +195,20 @@ public class UserTest {
         restaurantOwnerUser.setRole(savedRestaurantOwner);
 
         final User customerUser = new User();
-        restaurantOwnerUser.setUsername("Maria Silva");
-        restaurantOwnerUser.setLogin("maria.silva@fiap.com.br");
-        restaurantOwnerUser.setPassword("87654321");
-        restaurantOwnerUser.setRole(savedCustomer);
+        customerUser.setUsername("Maria Silva");
+        customerUser.setLogin("maria.silva@fiap.com.br");
+        customerUser.setPassword("87654321");
+        customerUser.setRole(savedCustomer);
 
         final User systemAdminUser = new User();
-        restaurantOwnerUser.setUsername("João Souza");
-        restaurantOwnerUser.setLogin("joao.souza@fiap.com.br");
-        restaurantOwnerUser.setPassword("abcdef12");
-        restaurantOwnerUser.setRole(savedSystemAdmin);
+        systemAdminUser.setUsername("João Souza");
+        systemAdminUser.setLogin("joao.souza@fiap.com.br");
+        systemAdminUser.setPassword("abcdef12");
+        systemAdminUser.setRole(savedSystemAdmin);
+
+        userUseCase.created(restaurantOwnerUser);
+        userUseCase.created(customerUser);
+        userUseCase.created(systemAdminUser);
 
         final int page = 0;
         final int size = 10;
