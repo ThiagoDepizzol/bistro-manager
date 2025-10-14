@@ -73,7 +73,6 @@ public class RestaurantTest {
                     return role;
                 });
 
-        final Map<Long, User> userMap = new HashMap<>();
         Mockito.when(userGateway.created(Mockito.any(User.class)))
                 .thenAnswer(invocation -> {
 
@@ -83,7 +82,6 @@ public class RestaurantTest {
                         user.setId(counter.getAndIncrement());
                     }
 
-                    userMap.put(user.getId(), user);
                     return user;
                 });
 
@@ -232,10 +230,12 @@ public class RestaurantTest {
         final Restaurant savedRestaurant = restaurantUseCase.created(restaurant);
 
         savedRestaurant.setName("Pizzaria a lenha MP");
-        restaurant.setKitchenType("Janta");
+        savedRestaurant.setKitchenType("Janta");
 
-        assertEquals("Pizzaria a lenha MP", savedRestaurant.getName());
-        assertEquals("Janta", savedRestaurant.getKitchenType());
+        final Restaurant updateRestaurant = restaurantUseCase.update(savedRestaurant);
+
+        assertEquals("Pizzaria a lenha MP", updateRestaurant.getName());
+        assertEquals("Janta", updateRestaurant.getKitchenType());
 
 
     }
