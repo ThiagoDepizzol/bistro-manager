@@ -23,8 +23,6 @@ public class UserTest {
 
     private RoleUseCase roleUseCase;
 
-    private final Long userId = 1L;
-
     @BeforeEach
     void setUp() {
 
@@ -32,9 +30,21 @@ public class UserTest {
 
         final RoleGateway roleGateway = Mockito.mock(RoleGateway.class);
 
-        final Map<Long, User> db = new HashMap<>();
+        final Map<Long, User> userMap = new HashMap<>();
 
         final AtomicLong counter = new AtomicLong(1L);
+
+        Mockito.when(roleGateway.created(Mockito.any(Role.class)))
+                .thenAnswer(invocation -> {
+
+                    final Role role = invocation.getArgument(0);
+
+                    if (role.getId() == null) {
+                        role.setId(counter.getAndIncrement());
+                    }
+
+                    return role;
+                });
 
         Mockito.when(userGateway.created(Mockito.any(User.class)))
                 .thenAnswer(invocation -> {
@@ -45,16 +55,29 @@ public class UserTest {
                         user.setId(counter.getAndIncrement());
                     }
 
-                    db.put(user.getId(), user);
+                    userMap.put(user.getId(), user);
                     return user;
                 });
 
-        Mockito.when(userGateway.findById(userId))
+        Mockito.when(userGateway.update(Mockito.any(User.class)))
+                .thenAnswer(invocation -> {
+
+                    final User user = invocation.getArgument(0);
+
+                    if (user.getId() == null) {
+                        user.setId(counter.getAndIncrement());
+                    }
+
+                    userMap.put(user.getId(), user);
+                    return user;
+                });
+
+        Mockito.when(userGateway.findById(Mockito.anyLong()))
                 .thenAnswer(invocation -> {
 
                     final Long id = invocation.getArgument(0);
 
-                    return Optional.ofNullable(db.get(id));
+                    return Optional.ofNullable(userMap.get(id));
                 });
 
         Mockito.when(userGateway.findAllActive(Mockito.anyInt(), Mockito.anyInt()))
@@ -63,7 +86,7 @@ public class UserTest {
                     final int page = invocation.getArgument(0);
                     final int size = invocation.getArgument(1);
 
-                    final List<User> activeUsers = new ArrayList<>(db.values());
+                    final List<User> activeUsers = new ArrayList<>(userMap.values());
 
                     final int fromIndex = page * size;
                     final int toIndex = Math.min(fromIndex + size, activeUsers.size());
@@ -89,22 +112,23 @@ public class UserTest {
         role.setName("Dono de restaurante");
         role.setType(RoleType.RESTAURANT_OWNER);
 
-        final Role saveRole = roleUseCase.created(role);
+        final Role savedRole = roleUseCase.created(role);
 
         final User user = new User();
+        user.setActive(true);
         user.setUsername("Thiago Depizzol");
         user.setLogin("thiago.depizzol@fiap.com.br");
         user.setPassword("12345678");
-        user.setRole(saveRole);
+        user.setRole(savedRole);
 
-        final User saveUser = userUseCase.created(user);
+        final User savedUser = userUseCase.created(user);
 
-        assertEquals("Thiago Depizzol", saveUser.getUsername());
-        assertEquals("thiago.depizzol@fiap.com.br", saveUser.getLogin());
-        assertEquals("12345678", saveUser.getPassword());
+        assertEquals("Thiago Depizzol", savedUser.getUsername());
+        assertEquals("thiago.depizzol@fiap.com.br", savedUser.getLogin());
+        assertEquals("12345678", savedUser.getPassword());
 
-        assertEquals("Dono de restaurante", saveRole.getName());
-        assertEquals(RoleType.RESTAURANT_OWNER, saveRole.getType());
+        assertEquals("Dono de restaurante", savedRole.getName());
+        assertEquals(RoleType.RESTAURANT_OWNER, savedRole.getType());
 
     }
 
@@ -125,12 +149,11 @@ public class UserTest {
         user.setPassword("12345678");
         user.setRole(saveRole);
 
-        final User saveUser = userUseCase.created(user);
+        final User savedUser = userUseCase.created(user);
 
-        saveUser.setUsername("Thiago Oliveira Depizzol");
+        savedUser.setUsername("Thiago Oliveira Depizzol");
 
-        final User updateUser = userUseCase.update(
-                saveUser);
+        final User updateUser = userUseCase.update(savedUser);
 
         assertEquals("Thiago Oliveira Depizzol", updateUser.getUsername());
         assertEquals("thiago.depizzol@fiap.com.br", updateUser.getLogin());
@@ -150,6 +173,7 @@ public class UserTest {
         final Role saveRole = roleUseCase.created(role);
 
         final User newUser = new User();
+        newUser.setActive(true);
         newUser.setUsername("Thiago Depizzol");
         newUser.setLogin("thiago.depizzol@fiap.com.br");
         newUser.setPassword("12345678");
@@ -163,7 +187,7 @@ public class UserTest {
                 .orElseThrow(() -> new IllegalStateException("User not found"));
 
         assertNotNull(user);
-        assertEquals(userId, user.getId());
+        assertEquals(id, user.getId());
         assertEquals("Thiago Depizzol", user.getUsername());
 
     }
@@ -177,12 +201,12 @@ public class UserTest {
         restaurantOwner.setType(RoleType.RESTAURANT_OWNER);
 
         final Role customer = new Role();
-        restaurantOwner.setName("Cliente");
-        restaurantOwner.setType(RoleType.CUSTOMER);
+        customer.setName("Cliente");
+        customer.setType(RoleType.CUSTOMER);
 
         final Role systemAdmin = new Role();
-        restaurantOwner.setName("Administrador de sistema");
-        restaurantOwner.setType(RoleType.SYSTEM_ADMIN);
+        systemAdmin.setName("Administrador de sistema");
+        systemAdmin.setType(RoleType.SYSTEM_ADMIN);
 
         final Role savedRestaurantOwner = roleUseCase.created(restaurantOwner);
         final Role savedCustomer = roleUseCase.created(customer);

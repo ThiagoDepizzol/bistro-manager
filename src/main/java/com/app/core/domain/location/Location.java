@@ -1,6 +1,8 @@
 package com.app.core.domain.location;
 
-public class Location {
+import com.app.core.domain.base.BaseEntity;
+
+public class Location extends BaseEntity {
 
     private Long id;
 
