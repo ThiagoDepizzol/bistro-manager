@@ -90,6 +90,17 @@ public class MenuTest {
             return location;
         });
 
+        Mockito.when(restaurantGateway.created(Mockito.any(Restaurant.class))).thenAnswer(invocation -> {
+
+            final Restaurant restaurant = invocation.getArgument(0);
+
+            if (restaurant.getId() == null) {
+                restaurant.setId(counter.getAndIncrement());
+            }
+
+            return restaurant;
+        });
+
         Mockito.when(menuGateway.created(Mockito.any(Menu.class))).thenAnswer(invocation -> {
 
             final Menu menu = invocation.getArgument(0);
